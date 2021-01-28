@@ -18,18 +18,6 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(png|jpe?g|gif|xml|tex|sty|make)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                    },
-                ],
-            },
-            {
-                test: /\.css$/i,
-                use: ["style-loader", "css-loader"],
-            },
-            {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 use: {
