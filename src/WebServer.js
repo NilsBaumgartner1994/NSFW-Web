@@ -1,5 +1,3 @@
-import 'react-app-polyfill/ie9';
-
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
@@ -39,7 +37,7 @@ export default class WebServer extends Component {
 
     start(){
         ReactDOM.render(
-            this,
+            this.render(),
             document.getElementById('root')
         );
     }
