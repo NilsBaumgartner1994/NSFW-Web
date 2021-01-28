@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
-import config from './../../config';
 
 export class SupportComponent extends Component {
+
+    constructor(props) {
+        super(props);
+    }
 
     render() {
         return (
@@ -11,7 +14,7 @@ export class SupportComponent extends Component {
                     <h2>DON'T PANIC</h2>
                 </div>
                 <div className="features">
-                    <h3><a href={config.githubLink}>GitHub Repository</a></h3>
+                    <h3><a href={this.props.config.githubLink}>GitHub Repository</a></h3>
                     <p className="features-tagline">Whuups! <span role="img" aria-label="celebrate">🎉</span> Visit our repository for help</p>
                 </div>
             </div>
