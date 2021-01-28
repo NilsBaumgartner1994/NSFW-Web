@@ -7,10 +7,10 @@ import KlausurHeader from "../../examExportTemplates/latex/KlausurHeader.tex";
 import KlausurHinweise from "../../examExportTemplates/latex/KlausurHinweise.tex";
 import KlausurHinweiseOnline from "../../examExportTemplates/latex/KlausurHinweiseOnline.tex";
 import KlausurPackages from "../../examExportTemplates/latex/KlausurPackages.tex";
-import makefile from "../../examExportTemplates/latex/makefile";
+import makefile from "../../examExportTemplates/latex/makefile.make";
 import mult from "../../examExportTemplates/latex/mult.tex";
 import solution from "../../examExportTemplates/latex/solution.tex";
-import topLevelMakefile from "../../examExportTemplates/latex/topLevelMakefile";
+import topLevelMakefile from "../../examExportTemplates/latex/topLevelMakefile.make";
 
 import variables from "../../examExportTemplates/latex/variables.tex";
 
