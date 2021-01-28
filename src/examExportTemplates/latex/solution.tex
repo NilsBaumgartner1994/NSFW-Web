@@ -1,0 +1,29 @@
+\input{KlausurPackages.tex}
+\definecolor{darkgreen}{rgb}{0,0.49,0}
+\newenvironment{sol}{\par\color{red}}{\par}
+\newenvironment{eval}{\par\color{darkgreen}}{\par}
+\renewcommand{\assig}[1]{}
+\begin{document}
+\pagestyle{fancy}
+\thispagestyle{empty}
+\setcounter{page}{1}
+\setcounter{anr}{1}
+\setcounter{points}{0}
+\input{variables.tex}
+\input{KlausurHeader.tex}
+\vfill
+\input{KlausurHinweise.tex}
+\vfill
+\begin{absolutelynopagebreak}
+    \input{KlausurAufgabentabelle.tex}
+\end{absolutelynopagebreak}
+\vfill
+\newpage
+\lhead{\fancyplain{}{Name: Musterlösung}}
+\input{assignments.tex}
+\pagestyle{plain}
+\subsection*{Exam Report:}
+\addtocounter{anr}{-1}
+\textbf{Number of assignments \arabic{anr}}\\
+\textbf{Total Number of Points: \arabic{points}}
+\end{document}

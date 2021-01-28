@@ -1,0 +1,31 @@
+%Klausuren aus Teilnehmerliste erstellen
+\input{KlausurPackages.tex}
+\begin{document}
+% Spaltentrenner angeben
+\setcsvseparator{;}
+% hier CSV-Teilnehmerliste eintragen
+\applyCSVfile*{teilnehmer.csv}{
+\thispagestyle{empty}
+\setcounter{page}{1}
+\setcounter{anr}{1}
+\setcounter{points}{0}
+\input{KlausurHeader.tex}
+\begin{center}
+\begin{tabular*}{12cm}{l@{\hspace{1cm}}cl@{\extracolsep\fill}c}
+Name: & & \large \bf \field{1}, \field{2} \\ \cline{2-4}\\
+Matr.-Nr.: & & \field{3} \\ \cline{2-4}
+\end{tabular*}
+\end{center}
+\vfill
+\input{KlausurHinweise.tex}
+\vfill
+\begin{absolutelynopagebreak}
+    \input{KlausurAufgabentabelle.tex}
+\end{absolutelynopagebreak}
+\vfill
+\newpage
+\pagestyle{fancy}
+\lhead{\fancyplain{Name: \field{1}, \field{2}} {Name: \field{1}, \field{2}}}
+\input{assignments.tex}
+}
+\end{document}

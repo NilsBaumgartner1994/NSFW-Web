@@ -1,0 +1,94 @@
+\documentclass[11pt,a4wide,german]{report}
+
+%\usepackage[top=0cm, bottom=0cm, left=0cm, right=0cm]{geometry}
+\usepackage[margin=1.0in]{geometry}
+
+\usepackage{lastpage} % To get the amount of pages, but compiling need to be run twice !
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{sourcecodepro}
+\usepackage{ulem}
+\usepackage{supertabular}
+\usepackage{amsfonts}
+\usepackage{fancyhdr}
+\usepackage{ifthen}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{tabularx}
+\usepackage{paralist}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{comment}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{fancyvrb}
+\usepackage{cprotect}
+\usepackage{./libs/csvtools}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usetikzlibrary{positioning,arrows}
+\usetikzlibrary{calc}
+\usepackage{tcolorbox}
+
+%\usepackage[]{fullpage}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\flushright\arraybackslash}p{#1}}
+
+%\renewcommand{\ttdefault}{cmtt}
+%\renewcommand{\ttdefault}{sourcecodepro}
+\renewcommand{\ttdefault}{pcr}
+
+\parindent 0pt
+
+\lhead{\fancyplain{Name:}{Name:}}
+\chead{}
+\rhead{\fancyplain{Seite \thepage}{Seite \thepage}}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+
+\lstset{language=Java,
+ basicstyle=\small\ttfamily,
+ keywordstyle=\small\ttfamily,
+ captionpos=t,
+ float=htbp,
+ numbers=left,
+ numbersep=5pt,
+ numberstyle=\tiny
+}
+
+\newcounter{points}
+
+\newcommand{\assig}[1]{#1}
+\newcommand{\answerfield}[1]{
+\begin{center}
+\begin{tabular}{|p{8cm}|}
+\hline
+#1
+\rule[-4mm]{0mm}{10mm}  \\ \hline
+\end{tabular}
+\end{center}
+}
+
+\newcounter{anr}
+\stepcounter{anr}
+
+\newenvironment{absolutelynopagebreak} %Prevent page breaks
+{\par\nobreak\vfil\penalty0\vfilneg %https://tex.stackexchange.com/questions/94699/absolutely-definitely-preventing-page-break
+\vtop\bgroup}
+{\par\xdef\tpd{\the\prevdepth}\egroup
+\prevdepth=\tpd}
+
+
+\newcommand{\assignment}[2]{
+\subsection*{Aufgabe \arabic{anr} (#1, #2 Punkte)}
+\stepcounter{anr} 
+\addtocounter{points}{#2}
+}
+
+

@@ -1,0 +1,21 @@
+<svg width="170" height="60" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <mask maskUnits="userSpaceOnUse" id="sample">
+   <rect id="svg_2" fill="white" height="100%" width="100%"/>
+   <text id="svg_3" font-family="Impact" font-style="italic" font-size="60" y="60" x="5">E</text>
+   <text id="svg_3" font-family="Impact" font-style="italic" font-size="60" y="56" x="39">S</text>
+   <text id="svg_3" font-family="Impact" font-style="italic" font-size="60" y="52" x="73">M</text>
+   <text id="svg_3" font-family="Impact" font-style="italic" font-size="60" y="48" x="125">A</text>
+  </mask>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="172" height="62" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="svg_1">
+   <rect id="svg_5" height="60" width="170" y="0" x="0" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#FBE64A" fill-rule="evenodd" mask="url(#sample)"/>
+  </g>
+ </g>
+</svg>
