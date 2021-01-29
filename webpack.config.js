@@ -12,6 +12,7 @@ module.exports = {
     },
     output: {
         path: __dirname + "/dist",
+        publicPath: '/assets/',
         filename: 'index.js',
         libraryTarget: 'commonjs2',
     },
@@ -19,22 +20,18 @@ module.exports = {
         rules: [
             {
                 test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: 'fonts/'
-                        }
-                    }
-                ]
+                loader: 'file-loader',
+                options: {
+                    name: '/public/fonts/[name].[ext]'
+                }
             },
             {
                 test: /\.(png|jpe?g|gif)$/i,
-                loader: "url-loader",
-                options: {
-                    limit: Infinity // everything
-                }
+                use: [
+                    {
+                        loader: 'file-loader',
+                    },
+                ],
             },
             {
                 test: /\.css$/i,
