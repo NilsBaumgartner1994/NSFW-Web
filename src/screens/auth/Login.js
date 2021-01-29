@@ -66,14 +66,13 @@ export class Login extends Component {
 
     async loadStoredCredentials(){
         let state = {};
-        let selectedAuth = MyStorage.getItem(MyStorage.CREDENTIALS_AUTHMETHOD,this.state.selectedAuth);
+        let selectedAuth = await MyStorage.getAuthMethod();
         if(!!selectedAuth){
             state.selectedAuth = selectedAuth;
         }
         state.currentUser = null;
-        let currentUserString = MyStorage.getItem(MyStorage.CREDENTIALS_CURRENT_USER);
-        if(!!currentUserString){
-            let currentUser = JSON.parse(currentUserString);
+        let currentUser = await MyStorage.getCurrentUser();
+        if(!!currentUser){
             state.currentUser = currentUser;
         }
 
@@ -110,8 +109,7 @@ export class Login extends Component {
         };
 
         if(RequestHelper.isSuccess(authAnswer)){
-            let currentUserAsString = MyStorage.getItem(MyStorage.CREDENTIALS_CURRENT_USER,JSON);
-            let currentUser = JSON.parse(currentUserAsString);
+            let currentUser = await MyStorage.getCurrentUser();
             nextState.currentUser = currentUser;
             await APIRequest.AppInstance.setLoggedInState(true);
         }
