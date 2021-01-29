@@ -3,7 +3,6 @@ import {Route, Link, Switch} from 'react-router-dom';
 import {withRouter} from 'react-router';
 import {AppMenu} from './AppMenu';
 import classNames from 'classnames';
-import 'babel-polyfill';
 import './resources/style/primereact.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
