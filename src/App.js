@@ -15,7 +15,11 @@ import HomeComponent from './screens/home/HomeComponent';
 import {SupportComponent} from './screens/home/SupportComponent';
 import {Login} from "./screens/auth/Login";
 
-import {ResourceIndex, ResourceInstance, ResourceCreate, RouteHelper, NSFWConnector, APIRequest, AuthConnector, MyStorage} from "nsfw-connector";
+import {ResourceIndex} from "./screens/dataview/ResourceIndex";
+import {ResourceInstance} from "./screens/dataview/ResourceInstance";
+import {ResourceCreate} from "./screens/dataview/ResourceCreate";
+
+import {RouteHelper, NSFWConnector, AuthConnector, MyStorage} from "nsfw-connector";
 
 export class App extends Component {
 
