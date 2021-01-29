@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import config from './../../config';
 
-export class HomeComponent extends Component {
+export default class HomeComponent extends Component {
 
     render() {
         return (

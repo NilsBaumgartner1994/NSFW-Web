@@ -2,5 +2,5 @@
 module.exports = {
     ServerWeb: require('./ServerWeb').default, // eslint-disable-line global-require
     App: require('./App').default, // eslint-disable-line global-require
-
+    HomeComponent: require('./screens/home/HomeComponent').default, // eslint-disable-line global-require
 };
