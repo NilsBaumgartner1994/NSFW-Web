@@ -2,9 +2,9 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     target: 'web',
-    externals: [
-        nodeExternals({modulesFromFile: true,})
-    ],
+    //externals: [
+    //    nodeExternals({modulesFromFile: true,})
+    //],
     entry: ['./src/index.js'],
     node: {
         fs: 'empty',
@@ -17,6 +17,18 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'fonts/'
+                        }
+                    }
+                ]
+            },
             {
                 test: /\.(png|jpe?g|gif)$/i,
                 use: [
