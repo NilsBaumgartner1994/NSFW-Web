@@ -18,18 +18,23 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(ttf|eot|svg|png|woff(2)?)(\?[a-z0-9]+)?$/,
-                use: [{
-                    loader: 'file-loader', options: {esModule: false}
-                }]
-            },
-            {
-                test: /\.(png|jpe?g|gif)$/i,
+                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
                 use: [
                     {
                         loader: 'file-loader',
-                    },
-                ],
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'fonts/'
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.(png|jpe?g|gif)$/i,
+                loader: "url-loader",
+                options: {
+                    limit: Infinity // everything
+                }
             },
             {
                 test: /\.css$/i,
