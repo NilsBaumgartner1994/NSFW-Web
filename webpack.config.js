@@ -1,4 +1,6 @@
 const nodeExternals = require('webpack-node-externals');
+const path = require('path');
+const outputDir = path.join(__dirname, 'dist/');
 
 module.exports = {
     target: 'web',
@@ -11,8 +13,8 @@ module.exports = {
         child_process: 'empty',
     },
     output: {
-        path: __dirname + "/dist",
-        publicPath: '/assets/',
+        path: outputDir,
+        publicPath: outputDir,
         filename: 'index.js',
         libraryTarget: 'commonjs2',
     },
@@ -20,18 +22,17 @@ module.exports = {
         rules: [
             {
                 test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file-loader',
+                loader: "url-loader",
                 options: {
-                    name: '/public/fonts/[name].[ext]'
+                    limit: Infinity // everything
                 }
             },
             {
                 test: /\.(png|jpe?g|gif)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                    },
-                ],
+                loader: "url-loader",
+                options: {
+                    limit: Infinity // everything
+                }
             },
             {
                 test: /\.css$/i,
