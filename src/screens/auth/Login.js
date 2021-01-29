@@ -8,6 +8,7 @@ import {Checkbox} from "../../components/checkbox/Checkbox";
 import config from './../../config.json';
 
 import {APIRequest, AuthConnector, MyStorage, RequestHelper} from "nsfw-connector";
+import App from "../../App";
 
 export class Login extends Component {
 
@@ -111,7 +112,7 @@ export class Login extends Component {
         if(RequestHelper.isSuccess(authAnswer)){
             let currentUser = await MyStorage.getCurrentUser();
             nextState.currentUser = currentUser;
-            await APIRequest.AppInstance.setLoggedInState(true);
+            await App.AppInstance.setLoggedInState(true);
         }
 
         nextState = Object.assign(this.state,nextState);

@@ -19,6 +19,8 @@ import {ResourceIndex, ResourceInstance, ResourceCreate, RouteHelper, NSFWConnec
 
 export class App extends Component {
 
+    static AppInstance = null;
+
     static dialog = null;
     static growl = null;
 
@@ -28,15 +30,16 @@ export class App extends Component {
         }
     }
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        console.log("App constructor");
         this.state = {
             mobileMenuActive: false,
             themeMenuActive: false,
             themeMenuVisited: false,
             loading: true,
         };
-        APIRequest.AppInstance = this;
+        App.AppInstance = this;
 
         this.theme = 'luna-amber';
         this.changeTheme = this.changeTheme.bind(this);
@@ -48,11 +51,14 @@ export class App extends Component {
         this.onThemeChangerKeyDown = this.onThemeChangerKeyDown.bind(this);
         this.onThemesMenuRouteChange = this.onThemesMenuRouteChange.bind(this);
 
+        console.log("Start load Informations");
         this.loadInformations();
     }
 
     async loadInformations(){
         NSFWConnector.reset();
+        let instance = this;
+        NSFWConnector.Callback_Logout = () => {instance.setLoggedInState(false)};
         let loggedIn = await AuthConnector.isLoggedInUser();
         let schemes = await NSFWConnector.getSchemes() || {};
         let tableNames = Object.keys(schemes);
@@ -245,12 +251,16 @@ export class App extends Component {
     }
 
     render() {
+        console.log("Render App")
         if(this.state.loading){
+            console.log("App still loading");
             return null;
         }
         if(!this.state.loggedIn){
+            console.log("Show login state");
             return <Login/>
         }
+        console.log("Show logged in App");
 
         let currentUser = MyStorage.getCurrentUser();
         let displayName = "What ?";
