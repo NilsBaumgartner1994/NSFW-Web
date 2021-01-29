@@ -12,16 +12,18 @@ module.exports = {
     },
     output: {
         path: __dirname + "/dist",
+        publicPath: '/assets/',
         filename: 'index.js',
         libraryTarget: 'commonjs2',
     },
     module: {
         rules: [
             {
-                test: /\.(ttf|eot|svg|png|woff(2)?)(\?[a-z0-9]+)?$/,
-                use: [{
-                    loader: 'file-loader', options: {esModule: false}
-                }]
+                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                loader: 'file-loader',
+                options: {
+                    name: '/public/fonts/[name].[ext]'
+                }
             },
             {
                 test: /\.(png|jpe?g|gif)$/i,
