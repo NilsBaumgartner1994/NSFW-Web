@@ -11,7 +11,7 @@ import config from './config';
 
 import {Growl} from "./components/growl/Growl";
 import {DialogHelper} from "./helper/DialogHelper";
-import {HomeComponent} from './screens/home/HomeComponent';
+import HomeComponent from './screens/home/HomeComponent';
 import {SupportComponent} from './screens/home/SupportComponent';
 import {Login} from "./screens/auth/Login";
 
@@ -76,15 +76,7 @@ export class App extends Component {
 
     renderCustomRoutes(){
         return [
-            <Route exact path="/custom/GraphEditor/Netzplan" component={Netzplan}/>,
-            <Route exact path="/test" component={Test}/>,
-            <Route exact path="/evaluateExam/Exams" component={OverviewExams}/>,
-            <Route exact path="/generateExam/:Exams_id" component={withRouter(ExamExportMenu)}/>,
-            <Route exact path="/evaluateExam/:Exams_id/:Examtasks_id" component={withRouter(OverviewExamtasksStudents)}/>,
-            <Route exact path="/evaluateExamtaskevaluation/:Examtaskevaluations_id" component={withRouter(TutorExamtaskevaluationInstance)}/>,
 
-            <Route exact path="/activeExamStatistic/" component={withRouter(DozentExamTranscriptOfRecords)}/>,
-            <Route exact path="/evaluteExamOverviewStudents/" component={withRouter(OverviewStudents)}/>,
         ]
     }
 

@@ -143,7 +143,7 @@ export class AppMenu extends Component {
      */
 
     render() {
-        let sidebarContentDozent = this.renderSidebarListOfBulletLinks({"Klausur Auswertung": "/activeExamStatistic", "Studierende Übersicht" : "/evaluteExamOverviewStudents"});
+        let sidebarContentDozent = this.renderSidebarListOfBulletLinks({"Klausur Auswertung": "/activeExamStatistic", "Studierende Uebersicht" : "/evaluteExamOverviewStudents"});
         let sidebarContentBackups = this.renderSidebarListOfBulletLinks({"Database Backups": "/functions/backups"});
         let sidebarContentEvaluate = this.renderSidebarListOfBulletLinks({"Klausur Korrektur": "/evaluateExam/Exams"});
         let sidebarContentGraphEditor = this.renderSidebarListOfBulletLinks({"Netzplan": "/custom/GraphEditor/Netzplan"});
