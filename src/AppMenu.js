@@ -171,6 +171,11 @@ export class AppMenu extends Component {
     }
 
     renderCustomMenuContentList(menuContentList, startIndex){
+        console.log("renderCustomMenuContentList");
+        console.log("menuContentList");
+        console.log(menuContentList);
+        console.log("startIndex");
+        console.log(startIndex);
         let index = startIndex;
         let output = [];
         for(let i=0; i<menuContentList.length; i++){
@@ -180,6 +185,7 @@ export class AppMenu extends Component {
             let mapOfNameToRoutes = menuContent.mapOfNameToRoutes;
             output.push(this.renderSidebarMenu(index++,menuName,icon,this.renderSidebarListOfBulletLinks(mapOfNameToRoutes)));
         }
+        console.log(output);
         return output;
     }
 
@@ -193,12 +199,20 @@ export class AppMenu extends Component {
         let bottomMenuContent = [];
 
         let sortedCustomMenuKeys = this.getSortedCustomMenuKeys();
+        console.log("sortedCustomMenuKeys");
+        console.log(sortedCustomMenuKeys);
         for(let i=0; i<sortedCustomMenuKeys.length; i++){
             let menuKey = sortedCustomMenuKeys[i];
+            console.log("menuKey");
+            console.log(menuKey);
             let customMenuObject = AppMenu[menuKey];
+            console.log("customMenuObject")
+            console.log(customMenuObject)
             if(!isNaN(menuKey) && parseInt(menuKey) < 0){
+                console.log("Top content");
                 topMenuContent.push(customMenuObject);
             } else {
+                console.log("Bottom content");
                 bottomMenuContent.push(customMenuObject);
             }
         }
@@ -210,7 +224,7 @@ export class AppMenu extends Component {
                 {this.renderCustomMenuContentList(topMenuContent, -topMenuContent.length)}
                 {this.renderSidebarMenu(index++,"Tables","data",this.renderSchemesSingle())}
                 {this.renderSidebarMenu(index++,"Associations","data",this.renderSchemesAssociations())}
-                {this.renderCustomMenuContentList(topMenuContent, index)}
+                {this.renderCustomMenuContentList(bottomMenuContent, index)}
             </div>
         );
     }
