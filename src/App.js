@@ -31,6 +31,14 @@ export class App extends Component {
         App.DATAVIEW_CUSTOMIZATIONS[tableName] = component;
     }
 
+    static CUSTOM_ROUTES = {
+
+    }
+
+    static registerCustomRoute(route, component){
+        App.CUSTOM_ROUTES[route] = component;
+    }
+
 
     static AppInstance = null;
 
@@ -94,9 +102,21 @@ export class App extends Component {
     }
 
     renderCustomRoutes(){
-        return [
+        let routes = Object.keys(App.CUSTOM_ROUTES);
 
-        ]
+        let output = [];
+
+        for(let i=0; i<routes.length; i++){
+            let route = routes[i];
+            const CustomComponent = App.CUSTOM_ROUTES[route];
+            output.push(
+                <Route exact path={route} render={() => {
+                    return React.createElement(CustomComponent, {});
+                }} />
+            )
+        }
+
+        return output;
     }
 
     renderInstanceRoute(path, tableName){
