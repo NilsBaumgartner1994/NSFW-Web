@@ -5,6 +5,7 @@ import {CSSTransition} from 'react-transition-group';
 import {StringHelper} from "./helper/StringHelper";
 
 import {NSFWConnector} from "nsfw-connector";
+import App from "./App";
 
 export class AppMenu extends Component {
 
@@ -166,3 +167,5 @@ export class AppMenu extends Component {
         );
     }
 }
+
+export default AppMenu;

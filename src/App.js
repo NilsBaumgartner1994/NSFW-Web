@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Route, Link, Switch} from 'react-router-dom';
 import {withRouter} from 'react-router';
-import {AppMenu} from './AppMenu';
 import classNames from 'classnames';
 import './resources/style/primereact.css';
 import 'primeicons/primeicons.css';
@@ -20,6 +19,7 @@ import {ResourceInstance} from "./screens/dataview/ResourceInstance";
 import {ResourceCreate} from "./screens/dataview/ResourceCreate";
 
 import {RouteHelper, NSFWConnector, AuthConnector, MyStorage} from "nsfw-connector";
+import AppMenu from "./AppMenu";
 
 export class App extends Component {
 
