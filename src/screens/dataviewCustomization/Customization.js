@@ -10,8 +10,11 @@ export class Customization extends Component {
         let parentState = this.props.parentState;
         let instance = this.props.instance;
         let tableName = parentState.tableName;
-        switch(tableName){
-            //case "Expectations" : return <Expectations reloadPage={this.props.reloadPage} instance={instance} parentState={this.props.parentState} parentProps={this.props.parentProps} />
+
+        let customComponentForTablename = App.DATAVIEW_CUSTOMIZATIONS[tableName];
+
+        if(!!customComponentForTablename){
+            return <customComponentForTablename reloadPage={this.props.reloadPage} instance={instance} parentState={this.props.parentState} parentProps={this.props.parentProps} />
         }
         return null;
     }

@@ -26,7 +26,7 @@ export class AppMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeMenu: -1,
+            activeMenu: undefined,
             loading: true,
             advanced: false,
         };
@@ -140,20 +140,17 @@ export class AppMenu extends Component {
         )
     }
 
-    /**
-     * Icons:
-     * charts
-     * components
-     * data
-     * file
-     * dragdrop
-     * input
-     * message
-     * misc
-     * multimedia
-     * overlay
-     * panel
-     */
+    static ICON_CHARTS = "charts";
+    static ICON_COMPONENTS = "components";
+    static ICON_DATA = "data";
+    static ICON_FILE = "file";
+    static ICON_DRAGDROP = "dragrop";
+    static ICON_INPUT = "input";
+    static ICON_MESSAGE = "message";
+    static ICON_MISC = "misc";
+    static ICON_MULTIMDEIA = "multimedia";
+    static ICON_OVERLAY = "overlay";
+    static ICON_PANEL = "pnael";
 
     getSortedCustomMenuKeys(){
         let customMenuContents = AppMenu.CUSTOM_MENU_CONTENT;
@@ -171,11 +168,6 @@ export class AppMenu extends Component {
     }
 
     renderCustomMenuContentList(menuContentList, startIndex){
-        console.log("renderCustomMenuContentList");
-        console.log("menuContentList");
-        console.log(menuContentList);
-        console.log("startIndex");
-        console.log(startIndex);
         let index = startIndex;
         let output = [];
         for(let i=0; i<menuContentList.length; i++){
@@ -185,34 +177,20 @@ export class AppMenu extends Component {
             let mapOfNameToRoutes = menuContent.mapOfNameToRoutes;
             output.push(this.renderSidebarMenu(index++,menuName,icon,this.renderSidebarListOfBulletLinks(mapOfNameToRoutes)));
         }
-        console.log(output);
         return output;
     }
 
     render() {
-        let sidebarContentDozent = this.renderSidebarListOfBulletLinks({"Klausur Auswertung": "/activeExamStatistic", "Studierende Uebersicht" : "/evaluteExamOverviewStudents"});
-        let sidebarContentBackups = this.renderSidebarListOfBulletLinks({"Database Backups": "/functions/backups"});
-        let sidebarContentEvaluate = this.renderSidebarListOfBulletLinks({"Klausur Korrektur": "/evaluateExam/Exams"});
-        let sidebarContentGraphEditor = this.renderSidebarListOfBulletLinks({"Netzplan": "/custom/GraphEditor/Netzplan"});
-
         let topMenuContent = [];
         let bottomMenuContent = [];
 
         let sortedCustomMenuKeys = this.getSortedCustomMenuKeys();
-        console.log("sortedCustomMenuKeys");
-        console.log(sortedCustomMenuKeys);
         for(let i=0; i<sortedCustomMenuKeys.length; i++){
             let menuKey = sortedCustomMenuKeys[i];
-            console.log("menuKey");
-            console.log(menuKey);
             let customMenuObject = AppMenu.CUSTOM_MENU_CONTENT[menuKey];
-            console.log("customMenuObject")
-            console.log(customMenuObject)
             if(!isNaN(menuKey) && parseInt(menuKey) < 0){
-                console.log("Top content");
                 topMenuContent.push(customMenuObject);
             } else {
-                console.log("Bottom content");
                 bottomMenuContent.push(customMenuObject);
             }
         }

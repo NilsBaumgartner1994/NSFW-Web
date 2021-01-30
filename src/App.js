@@ -23,6 +23,15 @@ import AppMenu from "./AppMenu";
 
 export class App extends Component {
 
+    static DATAVIEW_CUSTOMIZATIONS = {
+
+    }
+
+    static addDataviewCustomization(tableName, component){
+        App.DATAVIEW_CUSTOMIZATIONS[tableName] = component;
+    }
+
+
     static AppInstance = null;
 
     static dialog = null;
