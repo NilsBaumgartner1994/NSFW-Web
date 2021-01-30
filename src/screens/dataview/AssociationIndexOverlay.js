@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {DefaultResourceDatatable} from "./DefaultResourceDatatable";
+import DefaultResourceDatatable from "./DefaultResourceDatatable";
 
 export default class AssociationIndexOverlay extends Component {
 

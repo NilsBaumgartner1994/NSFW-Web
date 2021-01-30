@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-export default classMyFileReaderHelper extends Component {
+export default class MyFileReaderHelper extends Component {
 
     static async getFileContent(importedFile){
         let response = await fetch(importedFile);

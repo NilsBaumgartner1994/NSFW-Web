@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Button} from "../components/button/Button";
 import {Chart} from "../components/chart/Chart";
 import {Card} from "../components/card/Card";
-import {ColorHelper} from "./ColorHelper";
+import ColorHelper from "./ColorHelper";
 
 export default class MyChartHelper extends Component {
   static renderInteractiveDateChart(

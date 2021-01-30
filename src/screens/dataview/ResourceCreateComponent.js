@@ -4,8 +4,8 @@ import {Card} from '../../components/card/Card';
 import {Growl} from '../../components/growl/Growl';
 import {ProgressBar} from '../../components/progressbar/ProgressBar';
 import {Button} from '../../components/button/Button';
-import {WindowHelper} from "../../helper/WindowHelper";
-import {EditableField} from "./EditableField";
+import WindowHelper from "../../helper/WindowHelper";
+import EditableField from "./EditableField";
 
 import {RouteHelper, NSFWConnector, APIRequest, RequestHelper, SchemeHelper} from "nsfw-connector";
 

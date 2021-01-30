@@ -10,11 +10,11 @@ import {Link} from 'react-router-dom';
 import {Button} from '../../components/button/Button';
 
 import {Checkbox} from "../../components/checkbox/Checkbox";
-import {DatatableDownloader} from "../../helper/DatatableDownloader";
-import {DataTableHelper} from "./DataTableHelper";
+import DatatableDownloader from "../../helper/DatatableDownloader";
+import DataTableHelper from "./DataTableHelper";
 import {Menubar} from "../../components/menubar/Menubar";
 import {OverlayPanel} from "../../components/overlaypanel/OverlayPanel";
-import {MyDatatableImporter} from "../../helper/MyDatatableImporter";
+import MyDatatableImporter from "../../helper/MyDatatableImporter";
 
 import {NSFWConnector, APIRequest, RequestHelper, SchemeHelper} from "nsfw-connector";
 

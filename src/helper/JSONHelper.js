@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-export default classJSONHelper extends Component {
+export default class JSONHelper extends Component {
 
     static getValuesAsList(json){
         let keys = Object.keys(json);

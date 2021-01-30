@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {DefaultResourceDatatable} from "./DefaultResourceDatatable";
+import DefaultResourceDatatable from "./DefaultResourceDatatable";
 import {Button} from "../../components/button/Button";
-import {WindowHelper} from "../../helper/WindowHelper";
+import WindowHelper from "../../helper/WindowHelper";
 import {Dialog} from "../../components/dialog/Dialog";
 import App from "../../App";
 

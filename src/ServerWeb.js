@@ -4,7 +4,7 @@ import App from './App';
 import ScrollToTop from './showcase/scrolltotop/ScrollToTop';
 import { BrowserRouter as Router } from 'react-router-dom';
 import config from './config';
-import {ReactComponentToHTMLImageRenderer} from "./helper/ReactComponentToHTMLImageRenderer";
+import ReactComponentToHTMLImageRenderer from "./helper/ReactComponentToHTMLImageRenderer";
 
 document.title = config.title;
 

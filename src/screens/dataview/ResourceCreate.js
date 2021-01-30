@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ResourceCreateComponent} from './ResourceCreateComponent';
+import ResourceCreateComponent from './ResourceCreateComponent';
 
 export default class ResourceCreate extends Component {
 

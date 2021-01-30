@@ -9,14 +9,14 @@ import 'prismjs/themes/prism-coy.css';
 import config from './config';
 
 import {Growl} from "./components/growl/Growl";
-import {DialogHelper} from "./helper/DialogHelper";
+import DialogHelper from "./helper/DialogHelper";
 import HomeComponent from './screens/home/HomeComponent';
-import {SupportComponent} from './screens/home/SupportComponent';
-import {Login} from "./screens/auth/Login";
+import SupportComponent from './screens/home/SupportComponent';
+import Login from "./screens/auth/Login";
 
-import {ResourceIndex} from "./screens/dataview/ResourceIndex";
-import {ResourceInstance} from "./screens/dataview/ResourceInstance";
-import {ResourceCreate} from "./screens/dataview/ResourceCreate";
+import ResourceIndex from "./screens/dataview/ResourceIndex";
+import ResourceInstance from "./screens/dataview/ResourceInstance";
+import ResourceCreate from "./screens/dataview/ResourceCreate";
 
 import {RouteHelper, NSFWConnector, AuthConnector, MyStorage} from "nsfw-connector";
 import AppMenu from "./AppMenu";

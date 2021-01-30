@@ -7,7 +7,7 @@ import {Dialog} from '../../components/dialog/Dialog';
 
 import {Editor} from "../../components/editor/Editor";
 import {SelectButton} from "../../components/selectbutton/SelectButton";
-import {MyImageUploader} from "../../helper/MyImageUploader";
+import MyImageUploader from "../../helper/MyImageUploader";
 
 import {SchemeHelper} from "nsfw-connector";
 

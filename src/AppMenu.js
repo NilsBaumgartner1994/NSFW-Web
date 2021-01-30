@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import classNames from 'classnames';
 import {Link} from 'react-router-dom';
 import {CSSTransition} from 'react-transition-group';
-import {StringHelper} from "./helper/StringHelper";
+import StringHelper from "./helper/StringHelper";
 
 import {NSFWConnector} from "nsfw-connector";
 import App from "./App";

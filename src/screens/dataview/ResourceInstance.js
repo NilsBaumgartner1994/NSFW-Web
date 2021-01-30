@@ -6,13 +6,13 @@ import {ProgressBar} from '../../components/progressbar/ProgressBar';
 import {Button} from '../../components/button/Button';
 import {Dialog} from '../../components/dialog/Dialog';
 import {OverlayPanel} from '../../components/overlaypanel/OverlayPanel';
-import {AssociationIndexOverlay} from "./AssociationIndexOverlay";
-import {HeaderTemplate} from "../../templates/HeaderTemplate";
+import AssociationIndexOverlay from "./AssociationIndexOverlay";
+import HeaderTemplate from "../../templates/HeaderTemplate";
 import App from "../../App";
-import {MyImageUploader} from "../../helper/MyImageUploader";
-import {ResourceCreateComponent} from "./ResourceCreateComponent";
-import {EditableField} from "./EditableField";
-import {Customization} from "../dataviewCustomization/Customization";
+import MyImageUploader from "../../helper/MyImageUploader";
+import ResourceCreateComponent from "./ResourceCreateComponent";
+import EditableField from "./EditableField";
+import Customization from "../dataviewCustomization/Customization";
 
 import {RouteHelper, NSFWConnector, APIRequest, RequestHelper, SchemeHelper, ResourceAssociationHelper} from "nsfw-connector";
 
