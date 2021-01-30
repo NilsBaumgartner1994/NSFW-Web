@@ -205,7 +205,7 @@ export class AppMenu extends Component {
             let menuKey = sortedCustomMenuKeys[i];
             console.log("menuKey");
             console.log(menuKey);
-            let customMenuObject = AppMenu[menuKey];
+            let customMenuObject = AppMenu.CUSTOM_MENU_CONTENT[menuKey];
             console.log("customMenuObject")
             console.log(customMenuObject)
             if(!isNaN(menuKey) && parseInt(menuKey) < 0){
