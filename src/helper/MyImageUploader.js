@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {FileUpload} from "../components/fileupload/FileUpload";
 
-export class MyImageUploader extends Component {
+export default class MyImageUploader extends Component {
 
   constructor(props) {
     super(props);

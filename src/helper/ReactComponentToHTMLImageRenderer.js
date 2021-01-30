@@ -8,7 +8,7 @@ const fileType = {
     PDF: 'application/pdf'
 };
 
-export class ReactComponentToHTMLImageRenderer extends Component {
+export default class ReactComponentToHTMLImageRenderer extends Component {
 
     static getHiddenContainer(){
         let hidden = true;

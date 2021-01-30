@@ -18,7 +18,7 @@ import {MyDatatableImporter} from "../../helper/MyDatatableImporter";
 
 import {NSFWConnector, APIRequest, RequestHelper, SchemeHelper} from "nsfw-connector";
 
-export class DefaultResourceDatatable extends Component {
+export default classDefaultResourceDatatable extends Component {
 
     static DEFAULT_ITEMS_PER_PAGE = 10;
     static searchLoopIcon = "\ud83d\udd0d";

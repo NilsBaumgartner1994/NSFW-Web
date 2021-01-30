@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-export class NumberHelper extends Component {
+export default classNumberHelper extends Component {
 
     //https://stackoverflow.com/questions/45787459/convert-number-to-alphabet-string-javascript/45787487
    static numToSSColumn(num){

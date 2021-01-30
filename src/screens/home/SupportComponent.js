@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import config from './../../config';
 
-export class SupportComponent extends Component {
+export default class SupportComponent extends Component {
 
     render() {
         return (

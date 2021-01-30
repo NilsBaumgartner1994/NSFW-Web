@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-export class ColorHelper extends Component {
+export default class ColorHelper extends Component {
 
     static getRandomColor() {
         let letters = "0123456789ABCDEF";

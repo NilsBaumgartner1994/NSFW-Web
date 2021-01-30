@@ -3,7 +3,7 @@ import {getCriticalPaths, init} from "netzplan";
 import {NetzplanRenderer} from "../customHelper/NetzplanRenderer";
 
 
-export class FunctionHelper extends Component {
+export default class FunctionHelper extends Component {
 
     constructor() {
         super();

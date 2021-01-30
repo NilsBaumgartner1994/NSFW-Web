@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-export class DatatableDownloader extends Component {
+export default class DatatableDownloader extends Component {
 
     static downloadTableAsJSON(exportResourceAsList,fileName){
         let parsedJSON = exportResourceAsList;

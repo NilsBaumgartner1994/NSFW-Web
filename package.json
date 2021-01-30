@@ -74,6 +74,9 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "peerDependencies": {
+    "nsfw-connector": "^1.0.6"
+  },
   "dependencies": {
     "@types/d3": "^6.2.0",
     "@types/node": "^11.15.35",
@@ -99,7 +102,6 @@
     "netzplan": "^1.0.1",
     "node-latex": "^3.0.0",
     "npm": "^6.14.10",
-    "nsfw-connector": "^1.0.6",
     "pdf-to-base64": "^1.0.3",
     "primereact": "^4.2.2",
     "qs": "^6.9.4",

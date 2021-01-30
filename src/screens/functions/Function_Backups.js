@@ -16,7 +16,7 @@ const resourceName = additionalPath+"backups";
 const resourcePathToSingle = additionalPath+"backup";
 const resourceNameToUser = "Database Backups";
 
-export class Function_Backups extends Component {
+export default classFunction_Backups extends Component {
 
     constructor() {
         super();

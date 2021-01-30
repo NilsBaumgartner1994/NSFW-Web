@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-export class WindowHelper extends Component {
+export default classWindowHelper extends Component {
 
     static openUrl(url){
         window.location.href = url;

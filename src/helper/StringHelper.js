@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-export class StringHelper extends Component {
+export default class StringHelper extends Component {
 
    //https://stackoverflow.com/questions/4009756/how-to-count-string-occurrence-in-string
     static occurrences(string, subString, allowOverlapping=true) {

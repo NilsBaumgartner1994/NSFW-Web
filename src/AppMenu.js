@@ -7,7 +7,7 @@ import {StringHelper} from "./helper/StringHelper";
 import {NSFWConnector} from "nsfw-connector";
 import App from "./App";
 
-export class AppMenu extends Component {
+export default classAppMenu extends Component {
 
     static CUSTOM_MENU_CONTENT = {
 
@@ -207,5 +207,3 @@ export class AppMenu extends Component {
         );
     }
 }
-
-export default AppMenu;

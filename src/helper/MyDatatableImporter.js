@@ -3,7 +3,7 @@ import {FileUpload} from "../components/fileupload/FileUpload";
 
 const csv = require('csv');
 
-export class MyDatatableImporter extends Component {
+export default class MyDatatableImporter extends Component {
 
   static FILETYPE_JSON = "json";
   static FILETYPE_CSV = "csv";

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-export class ZipDownloader extends Component {
+export default class ZipDownloader extends Component {
 
     /**
      {

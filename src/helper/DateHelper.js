@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {DateTime} from "luxon";
 
-export class DateHelper extends Component {
+export default class DateHelper extends Component {
 
     static getDateDifferenceInMinutes(start,end){
         if(start != null && end != null){

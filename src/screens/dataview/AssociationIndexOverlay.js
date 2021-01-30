@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {DefaultResourceDatatable} from "./DefaultResourceDatatable";
 
-export class AssociationIndexOverlay extends Component {
+export default classAssociationIndexOverlay extends Component {
 
     static defaultStyle = {"margin-right":"0.769em","margin-top":"0.769em"};
 

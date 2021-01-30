@@ -21,7 +21,7 @@ import {ResourceCreate} from "./screens/dataview/ResourceCreate";
 import {RouteHelper, NSFWConnector, AuthConnector, MyStorage} from "nsfw-connector";
 import AppMenu from "./AppMenu";
 
-export class App extends Component {
+export default classApp extends Component {
 
     static DATAVIEW_CUSTOMIZATIONS = {
 
@@ -349,5 +349,3 @@ export class App extends Component {
         );
     }
 }
-
-export default App;

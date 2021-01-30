@@ -10,7 +10,7 @@ import config from './../../config.json';
 import {APIRequest, AuthConnector, MyStorage, RequestHelper} from "nsfw-connector";
 import App from "../../App";
 
-export class Login extends Component {
+export default class Login extends Component {
 
     constructor(props) {
         super(props);

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {ResourceCreateComponent} from './ResourceCreateComponent';
 
-export class ResourceCreate extends Component {
+export default class ResourceCreate extends Component {
 
     constructor(schemes,tableName) {
         super();

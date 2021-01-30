@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Dialog} from "../components/dialog/Dialog";
 import {Button} from "../components/button/Button";
 
-export class DialogHelper extends Component {
+export default class DialogHelper extends Component {
 
     constructor(props) {
         super(props);
