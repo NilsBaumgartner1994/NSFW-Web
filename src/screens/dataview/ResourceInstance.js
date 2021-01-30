@@ -16,7 +16,7 @@ import {Customization} from "../dataviewCustomization/Customization";
 
 import {RouteHelper, NSFWConnector, APIRequest, RequestHelper, SchemeHelper, ResourceAssociationHelper} from "nsfw-connector";
 
-export default classResourceInstance extends Component {
+export default class ResourceInstance extends Component {
 
     constructor(schemes,tableName) {
         super();

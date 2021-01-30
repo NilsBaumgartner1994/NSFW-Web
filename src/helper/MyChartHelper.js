@@ -4,7 +4,7 @@ import {Chart} from "../components/chart/Chart";
 import {Card} from "../components/card/Card";
 import {ColorHelper} from "./ColorHelper";
 
-export class MyChartHelper extends Component {
+export default class MyChartHelper extends Component {
   static renderInteractiveDateChart(
     instance,
     dataName,

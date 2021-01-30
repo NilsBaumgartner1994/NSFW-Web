@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import App from "../../App";
 
-export default classCustomization extends Component {
+export default class Customization extends Component {
 
     constructor(props) {
         super(props);

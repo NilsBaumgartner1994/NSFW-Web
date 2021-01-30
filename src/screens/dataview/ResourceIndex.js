@@ -7,7 +7,7 @@ import App from "../../App";
 
 import {RouteHelper, NSFWConnector, APIRequest, RequestHelper} from "nsfw-connector";
 
-export default classResourceIndex extends Component {
+export default class ResourceIndex extends Component {
 
     static DIALOG_DELETE = "dialogDelete";
 

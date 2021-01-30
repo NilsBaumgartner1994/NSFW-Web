@@ -11,7 +11,7 @@ import {MyImageUploader} from "../../helper/MyImageUploader";
 
 import {SchemeHelper} from "nsfw-connector";
 
-export class EditableField extends Component {
+export default class EditableField extends Component {
 
     constructor(props) {
         super(props);

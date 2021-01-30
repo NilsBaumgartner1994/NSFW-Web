@@ -10,7 +10,7 @@ import {EditableField} from "./EditableField";
 import {RouteHelper, NSFWConnector, APIRequest, RequestHelper, SchemeHelper} from "nsfw-connector";
 
 
-export default classResourceCreateComponent extends Component {
+export default class ResourceCreateComponent extends Component {
 
     /**
      * @param props

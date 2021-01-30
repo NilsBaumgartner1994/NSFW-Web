@@ -6,7 +6,7 @@ import {Button} from '../../components/button/Button';
 
 import {APIRequest, RequestHelper, SchemeHelper} from "nsfw-connector";
 
-export class DataTableHelper extends Component {
+export default class DataTableHelper extends Component {
 
     static searchLoopIcon = "\ud83d\udd0d";
     static defaultDivStyle = {"textAlign":"center","wordBreak": "break-word"};
