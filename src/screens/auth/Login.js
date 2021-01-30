@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Card} from "../../components/card/Card";
 import {Dropdown} from "../../components/dropdown/Dropdown";
 import {InputText} from "../../components/inputtext/InputText";
-import StringHelper from "../../helper/StringHelper";
+import {StringHelper} from "../../helper/StringHelper";
 import {Button} from "../../components/button/Button";
 import {Checkbox} from "../../components/checkbox/Checkbox";
 import config from './../../config.json';
@@ -291,3 +291,4 @@ export default class Login extends Component {
 
     }
 }
+

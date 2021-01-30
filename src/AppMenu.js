@@ -36,7 +36,7 @@ export default class AppMenu extends Component {
     toggleMenu(val) {
         let active = this.state.activeMenu === val;
 
-        this.setState({activeMenu: active ? -1 : val});
+        this.setState({activeMenu: active ? undefined : val});
     }
 
     async loadInformations(){
@@ -200,8 +200,8 @@ export default class AppMenu extends Component {
         return (
             <div className="layout-menu">
                 {this.renderCustomMenuContentList(topMenuContent, -topMenuContent.length)}
-                {this.renderSidebarMenu(index++,"Tables","data",this.renderSchemesSingle())}
-                {this.renderSidebarMenu(index++,"Associations","data",this.renderSchemesAssociations())}
+                {this.renderSidebarMenu(index++,"Tables",AppMenu.ICON_DATA,this.renderSchemesSingle())}
+                {this.renderSidebarMenu(index++,"Associations",AppMenu.ICON_DATA,this.renderSchemesAssociations())}
                 {this.renderCustomMenuContentList(bottomMenuContent, index)}
             </div>
         );
