@@ -110,9 +110,7 @@ export class App extends Component {
             let route = routes[i];
             const CustomComponent = App.CUSTOM_ROUTES[route];
             output.push(
-                <Route exact path={route} render={() => {
-                    return withRouter(React.createElement(CustomComponent, {}));
-                }} />
+                <Route exact path={route} withRouter={React.createElement(CustomComponent, {}))} />
             )
         }
 
