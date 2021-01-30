@@ -155,6 +155,34 @@ export class AppMenu extends Component {
      * panel
      */
 
+    getSortedCustomMenuKeys(){
+        let customMenuContents = AppMenu.CUSTOM_MENU_CONTENT;
+        let keys = Object.keys(customMenuContents);
+        keys.sort(function(a, b){
+            if(isNaN(a)){
+                return 1;
+            }
+            if(isNaN(b)){
+                return -1;
+            }
+            return parseInt(a)-parseInt(b);
+        });
+        return keys;
+    }
+
+    renderCustomMenuContentList(menuContentList, startIndex){
+        let index = startIndex;
+        let output = [];
+        for(let i=0; i<menuContentList.length; i++){
+            let menuContent = menuContentList[i];
+            let menuName = menuContent.menuName;
+            let icon = menuContent.icon;
+            let mapOfNameToRoutes = menuContent.mapOfNameToRoutes;
+            output.push(this.renderSidebarMenu(index++,menuName,icon,this.renderSidebarListOfBulletLinks(mapOfNameToRoutes)));
+        }
+        return output;
+    }
+
     render() {
         let sidebarContentDozent = this.renderSidebarListOfBulletLinks({"Klausur Auswertung": "/activeExamStatistic", "Studierende Uebersicht" : "/evaluteExamOverviewStudents"});
         let sidebarContentBackups = this.renderSidebarListOfBulletLinks({"Database Backups": "/functions/backups"});
@@ -163,15 +191,26 @@ export class AppMenu extends Component {
 
         let topMenuContent = [];
         let bottomMenuContent = [];
-        
+
+        let sortedCustomMenuKeys = this.getSortedCustomMenuKeys();
+        for(let i=0; i<sortedCustomMenuKeys.length; i++){
+            let menuKey = sortedCustomMenuKeys[i];
+            let customMenuObject = AppMenu[menuKey];
+            if(!isNaN(menuKey) && parseInt(menuKey) < 0){
+                topMenuContent.push(customMenuObject);
+            } else {
+                bottomMenuContent.push(customMenuObject);
+            }
+        }
+
         let index = 0;
 
         return (
             <div className="layout-menu">
-                {topMenuContent}
+                {this.renderCustomMenuContentList(topMenuContent, -topMenuContent.length)}
                 {this.renderSidebarMenu(index++,"Tables","data",this.renderSchemesSingle())}
                 {this.renderSidebarMenu(index++,"Associations","data",this.renderSchemesAssociations())}
-                {bottomMenuContent}
+                {this.renderCustomMenuContentList(topMenuContent, index)}
             </div>
         );
     }
