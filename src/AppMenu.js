@@ -9,6 +9,18 @@ import App from "./App";
 
 export class AppMenu extends Component {
 
+    static CUSTOM_MENU_CONTENT = {
+
+    }
+
+    static addCustomMenuContent(menuName, icon, index, mapOfNameToRoutes){
+        AppMenu.CUSTOM_MENU_CONTENT[index] = {
+            menuName: menuName,
+            icon: icon,
+            mapOfNameToRoutes: mapOfNameToRoutes
+        };
+    }
+
     static defaultDivStyle = {"textAlign":"left","wordBreak": "break-word"};
 
     constructor(props) {
@@ -149,20 +161,17 @@ export class AppMenu extends Component {
         let sidebarContentEvaluate = this.renderSidebarListOfBulletLinks({"Klausur Korrektur": "/evaluateExam/Exams"});
         let sidebarContentGraphEditor = this.renderSidebarListOfBulletLinks({"Netzplan": "/custom/GraphEditor/Netzplan"});
 
+        let topMenuContent = [];
+        let bottomMenuContent = [];
+        
         let index = 0;
 
         return (
             <div className="layout-menu">
-
-                {this.renderSidebarMenu(index++,"Dozent","file",sidebarContentDozent)}
-                {this.renderSidebarMenu(index++,"Tutoren","file",sidebarContentEvaluate)}
+                {topMenuContent}
                 {this.renderSidebarMenu(index++,"Tables","data",this.renderSchemesSingle())}
                 {this.renderSidebarMenu(index++,"Associations","data",this.renderSchemesAssociations())}
-                {this.renderSidebarMenu(index++,"Graph Editor","charts",sidebarContentGraphEditor)}
-                {this.renderSidebarMenu(index++,"Statistics","charts",null)}
-                {this.renderSidebarMenu(index++,"Backups","file",sidebarContentBackups)}
-                {this.renderSidebarMenu(index++,"Server Information","data",null)}
-
+                {bottomMenuContent}
             </div>
         );
     }
