@@ -75,7 +75,7 @@
     "not op_mini all"
   ],
   "peerDependencies": {
-    "nsfw-connector": "^1.0.6"
+    "nsfw-connector": "^1.0.8"
   },
   "dependencies": {
     "@types/d3": "^6.2.0",
