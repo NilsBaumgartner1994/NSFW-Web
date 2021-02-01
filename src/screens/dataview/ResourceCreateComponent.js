@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {ProgressSpinner} from '../../components/progressspinner/ProgressSpinner';
-import {Card} from '../../components/card/Card';
-import {Growl} from '../../components/growl/Growl';
-import {ProgressBar} from '../../components/progressbar/ProgressBar';
-import {Button} from '../../components/button/Button';
+import {ProgressSpinner} from 'primereact/progressspinner';
+import {Card} from 'primereact/card';
+import {Growl} from 'primereact/growl';
+import {ProgressBar} from 'primereact/progressbar';
+import {Button} from 'primereact/button';
 import WindowHelper from "../../helper/WindowHelper";
 import EditableField from "./EditableField";
 

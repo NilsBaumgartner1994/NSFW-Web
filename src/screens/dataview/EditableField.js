@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import {Button} from '../../components/button/Button';
-import {Calendar} from '../../components/calendar/Calendar';
-import {InputText} from '../../components/inputtext/InputText';
-import {InputTextarea} from '../../components/inputtextarea/InputTextarea';
-import {Dialog} from '../../components/dialog/Dialog';
+import {Button} from 'primereact/button';
+import {Calendar} from 'primereact/calendar';
+import {InputText} from 'primereact/inputtext';
+import {InputTextarea} from 'primereact/inputtextarea';
+import {Dialog} from 'primereact/dialog';
 
-import {Editor} from "../../components/editor/Editor";
-import {SelectButton} from "../../components/selectbutton/SelectButton";
+import {Editor} from "primereact/editor";
+import {SelectButton} from "primereact/selectbutton";
 import MyImageUploader from "../../helper/MyImageUploader";
 
 import {SchemeHelper} from "nsfw-connector";

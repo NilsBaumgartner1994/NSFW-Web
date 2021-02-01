@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {FileUpload} from "../components/fileupload/FileUpload";
+import {FileUpload} from "primereact/fileupload";
 
 export default class MyImageUploader extends Component {
 

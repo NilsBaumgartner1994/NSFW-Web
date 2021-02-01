@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Column} from '../../components/column/Column';
+import {Column} from 'primereact/column';
 import {Link} from 'react-router-dom';
 
-import {Button} from '../../components/button/Button';
+import {Button} from 'primereact/button';
 
 import {APIRequest, RequestHelper, SchemeHelper} from "nsfw-connector";
 

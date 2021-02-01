@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
-import {DataTable} from '../../components/datatable/DataTable';
-import {Paginator} from '../../components/paginator/Paginator';
-import {Column} from '../../components/column/Column';
-import {InputText} from '../../components/inputtext/InputText';
-import {ProgressSpinner} from '../../components/progressspinner/ProgressSpinner';
-import {MultiSelect} from '../../components/multiselect/MultiSelect';
+import {DataTable} from 'primereact/datatable';
+import {Paginator} from 'primereact/paginator';
+import {Column} from 'primereact/column';
+import {InputText} from 'primereact/inputtext';
+import {ProgressSpinner} from 'primereact/progressspinner';
+import {MultiSelect} from 'primereact/multiselect';
 import {Link} from 'react-router-dom';
 
-import {Button} from '../../components/button/Button';
+import {Button} from 'primereact/button';
 
-import {Checkbox} from "../../components/checkbox/Checkbox";
+import {Checkbox} from "primereact/checkbox";
 import DatatableDownloader from "../../helper/DatatableDownloader";
 import DataTableHelper from "./DataTableHelper";
-import {Menubar} from "../../components/menubar/Menubar";
-import {OverlayPanel} from "../../components/overlaypanel/OverlayPanel";
+import {Menubar} from "primereact/menubar";
+import {OverlayPanel} from "primereact/overlaypanel";
 import MyDatatableImporter from "../../helper/MyDatatableImporter";
 
 import {NSFWConnector, APIRequest, RequestHelper, SchemeHelper} from "nsfw-connector";

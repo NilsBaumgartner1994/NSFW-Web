@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {Card} from "../../components/card/Card";
-import {Dropdown} from "../../components/dropdown/Dropdown";
-import {InputText} from "../../components/inputtext/InputText";
+import {Card} from "primereact/card";
+import {Dropdown} from "primereact/dropdown";
+import {InputText} from "primereact/inputtext";
 import StringHelper from "../../helper/StringHelper";
-import {Button} from "../../components/button/Button";
-import {Checkbox} from "../../components/checkbox/Checkbox";
+import {Button} from "primereact/button";
+import {Checkbox} from "primereact/checkbox";
 
 import {APIRequest, AuthConnector, MyStorage, RequestHelper} from "nsfw-connector";
 import App from "../../App";

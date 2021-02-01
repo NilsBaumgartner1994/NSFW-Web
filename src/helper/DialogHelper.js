@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import {Dialog} from "../components/dialog/Dialog";
-import {Button} from "../components/button/Button";
+import {Dialog} from "primereact/dialog";
+import {Button} from "primereact/button";
 
 export default class DialogHelper extends Component {
 

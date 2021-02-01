@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import {Button} from "../components/button/Button";
-import {Chart} from "../components/chart/Chart";
-import {Card} from "../components/card/Card";
+import {Button} from "primereact/button";
+import {Chart} from "primereact/chart";
+import {Card} from "primereact/card";
 import ColorHelper from "./ColorHelper";
 
 export default class MyChartHelper extends Component {

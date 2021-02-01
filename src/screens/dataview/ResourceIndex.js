@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import DefaultResourceDatatable from "./DefaultResourceDatatable";
-import {Button} from "../../components/button/Button";
+import {Button} from "primereact/button";
 import WindowHelper from "../../helper/WindowHelper";
-import {Dialog} from "../../components/dialog/Dialog";
+import {Dialog} from "primereact/dialog";
 import App from "../../App";
 
 import {RouteHelper, NSFWConnector, APIRequest, RequestHelper} from "nsfw-connector";

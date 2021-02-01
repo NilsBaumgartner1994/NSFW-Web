@@ -2,13 +2,16 @@ import React, {Component} from 'react';
 import {Route, Link, Switch} from 'react-router-dom';
 import {withRouter} from 'react-router';
 import classNames from 'classnames';
-import './resources/style/primereact.css';
+
+import 'primereact/resources/primereact.min.css'; //load style for components
+import './resources/style/mainStyle.css'; //load our customizations
+
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import 'prismjs/themes/prism-coy.css';
 import npmPackage from "./../package.json";
 
-import {Growl} from "./components/growl/Growl";
+import {Growl} from "primereact/growl";
 import DialogHelper from "./helper/DialogHelper";
 import HomeComponent from './screens/home/HomeComponent';
 import SupportComponent from './screens/home/SupportComponent';
