@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Route, Link, Switch} from 'react-router-dom';
+import {Link, Switch} from 'react-router-dom';
+import Route from "react-router-dom/Route";
 import {withRouter} from 'react-router';
 import classNames from 'classnames';
 

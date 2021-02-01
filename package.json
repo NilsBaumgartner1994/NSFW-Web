@@ -42,10 +42,7 @@
     "prismjs": "1.21.0",
     "prop-types": "^15.6.2",
     "quill": "^1.3.7",
-    "react": "^16.14.0",
     "react-app-polyfill": "^0.2.1",
-    "react-dom": "^16.14.0",
-    "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.8",
     "react-transition-group": "^2.5.1",
     "webpack": "^4.35.0",
@@ -76,7 +73,11 @@
   ],
   "peerDependencies": {
     "nsfw-connector": "^1.0.8",
-    "primereact": "4.2.2"
+    "primereact": "4.2.2",
+    "react-router": "^4.3.1",
+    "react-dom": "^16.14.0",
+    "react-router-dom": "^4.3.1",
+    "react": "^16.14.0"
   },
   "dependencies": {
     "@types/d3": "^6.2.0",
@@ -109,7 +110,6 @@
     "react-dom-testing": "^1.10.1",
     "react-flow-renderer": "8.3.7",
     "react-graph-vis": "^1.0.5",
-    "react-router": "^4.3.1",
     "react-show-more-text": "^1.4.6",
     "react-smooth-collapse": "^2.1.0",
     "react-test-render-fns": "0.0.0",
