@@ -5,10 +5,10 @@ import {InputText} from "../../components/inputtext/InputText";
 import StringHelper from "../../helper/StringHelper";
 import {Button} from "../../components/button/Button";
 import {Checkbox} from "../../components/checkbox/Checkbox";
-import config from './../../config.json';
 
 import {APIRequest, AuthConnector, MyStorage, RequestHelper} from "nsfw-connector";
 import App from "../../App";
+import ServerWeb from "../../ServerWeb";
 
 export default class Login extends Component {
 
@@ -47,7 +47,7 @@ export default class Login extends Component {
             for(let i=0; i<authSelectItems.length; i++){
                 let authSelectItem = authSelectItems[i];
                 console.log(authSelectItem);
-                if(authSelectItem.value === config.preferedAuthMethod){
+                if(!!ServerWeb.CONFIG && authSelectItem.value === ServerWeb.CONFIG.preferedAuthMethod){
                     selectedAuth = authSelectItem.value;
                 }
             }

@@ -6,7 +6,7 @@ import './resources/style/primereact.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import 'prismjs/themes/prism-coy.css';
-import config from './config';
+import npmPackage from "./../package.json";
 
 import {Growl} from "./components/growl/Growl";
 import DialogHelper from "./helper/DialogHelper";
@@ -20,6 +20,7 @@ import ResourceCreate from "./screens/dataview/ResourceCreate";
 
 import {RouteHelper, NSFWConnector, AuthConnector, MyStorage} from "nsfw-connector";
 import AppMenu from "./AppMenu";
+import ServerWeb from "./ServerWeb";
 
 export default class App extends Component {
 
@@ -341,7 +342,8 @@ export default class App extends Component {
                         {this.renderCustomRoutes()}
                     </Switch>
                     <div className="content-section layout-footer clearfix">
-                        <span>{config.title} {config.version}</span>
+                        <span>{ServerWeb.CONFIG.title} {ServerWeb.CONFIG.version}</span>
+                        <span>powered by <a href={npmPackage.homepage}>{npmPackage.name}</a> {npmPackage.version}</span>
                     </div>
                 </div>
 

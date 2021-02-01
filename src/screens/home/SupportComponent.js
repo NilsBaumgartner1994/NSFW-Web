@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import config from './../../config';
+import ServerWeb from "../../ServerWeb";
 
 export default class SupportComponent extends Component {
 
@@ -11,7 +11,7 @@ export default class SupportComponent extends Component {
                     <h2>DON'T PANIC</h2>
                 </div>
                 <div className="features">
-                    <h3><a href={config.githubLink}>GitHub Repository</a></h3>
+                    <h3><a href={ServerWeb.CONFIG.githubLink}>GitHub Repository</a></h3>
                     <p className="features-tagline">Whuups! <span role="img" aria-label="celebrate">🎉</span> Visit our repository for help</p>
                 </div>
             </div>
