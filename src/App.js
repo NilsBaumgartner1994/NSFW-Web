@@ -30,7 +30,7 @@ export default class App extends Component {
     static CUSTOM_LOGO = null;
 
     static setCustomLogoSource(src){
-        App.CUSTOM_LOGO = this.renderLogoSrc(src);
+        App.CUSTOM_LOGO = App.renderLogoSrc(src);
     }
 
     static DATAVIEW_CUSTOMIZATIONS = {
@@ -119,6 +119,8 @@ export default class App extends Component {
         for(let i=0; i<routes.length; i++){
             let route = routes[i];
             const CustomComponent = App.CUSTOM_ROUTES[route];
+            console.log("Render Custom Routes");
+            console.log(CustomComponent);
             output.push(
                 <Route exact path={route} component={withRouter(CustomComponent)} />
             )
@@ -291,7 +293,7 @@ export default class App extends Component {
         this.unbindMenuDocumentClickListener();
     }
 
-    renderLogoSrc(src){
+    static renderLogoSrc(src){
         return <img alt="data" src={src} style={{width: "auto" ,height: 55}}/>;
     }
 
@@ -299,7 +301,7 @@ export default class App extends Component {
         if(!!App.CUSTOM_LOGO){
             return App.CUSTOM_LOGO;
         } else {
-            return this.renderLogoSrc("/showcase/resources/images/Banner.png");
+            return App.renderLogoSrc("/showcase/resources/images/Banner.png");
         }
     }
 
