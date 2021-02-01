@@ -123,7 +123,7 @@ export default class App extends Component {
             console.log("Render Custom Routes");
             console.log(CustomComponent);
             output.push(
-                <Route exact path={route} component={withRouter(CustomComponent)} />
+                <Route exact path={route} component={CustomComponent} />
             )
         }
 
