@@ -1,5 +1,7 @@
+import "regenerator-runtime/runtime.js";
 import React, {Component} from 'react';
 import App from './App';
+import ReactDOM from 'react-dom';
 import ScrollToTop from './showcase/scrolltotop/ScrollToTop';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ReactComponentToHTMLImageRenderer from "./helper/ReactComponentToHTMLImageRenderer";
