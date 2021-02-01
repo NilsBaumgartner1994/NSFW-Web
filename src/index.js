@@ -18,5 +18,6 @@ module.exports = {
     DefaultResourceDatatable: require('./screens/dataview/DefaultResourceDatatable').default, // eslint-disable-line global-require
 
     Card: require("./components/card/Card").Card,
+    Accordion: require("./components/accordion/Accordion").Accordion,
     Button: require("./components/button/Button").Button
 };
