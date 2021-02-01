@@ -24,6 +24,12 @@ import ServerWeb from "./ServerWeb";
 
 export default class App extends Component {
 
+    static CUSTOM_LOGO = null;
+
+    static setCustomLogoSource(src){
+        App.CUSTOM_LOGO = this.renderLogoSrc(src);
+    }
+
     static DATAVIEW_CUSTOMIZATIONS = {
 
     }
@@ -282,6 +288,28 @@ export default class App extends Component {
         this.unbindMenuDocumentClickListener();
     }
 
+    renderLogoSrc(src){
+        return <img alt="data" src={src} style={{width: "auto" ,height: 55}}/>;
+    }
+
+    renderLogo(){
+        if(!!App.CUSTOM_LOGO){
+            return App.CUSTOM_LOGO;
+        } else {
+            return this.renderLogoSrc("/showcase/resources/images/Banner.png");
+        }
+    }
+
+    renderPackageVersion(){
+        let version = npmPackage.version;
+        let splits = version.split(".");
+        let patch = splits[2];
+        if(!isNaN(patch)){
+            patch = parseInt(patch)+1; //since before uploading the package the version is old cached
+        }
+        return "v"+splits[0]+"."+splits[1]+"."+patch;
+    }
+
     render() {
         console.log("Render App")
         if(this.state.loading){
@@ -310,7 +338,7 @@ export default class App extends Component {
                         <i className="pi pi-bars"/>
                     </span>
                     <Link to="/" className="logo" style={{"margin-left":"0px"}}>
-                        <img alt="data" src="/showcase/resources/images/Banner.png" style={{width: "auto" ,height: 55}}/>
+                        {this.renderLogo()}
                     </Link>
 
                     <ul className="topbar-menu p-unselectable-text">
@@ -342,8 +370,8 @@ export default class App extends Component {
                         {this.renderCustomRoutes()}
                     </Switch>
                     <div className="content-section layout-footer clearfix">
-                        <span>{ServerWeb.CONFIG.title} {ServerWeb.CONFIG.version}</span>
-                        <span>powered by <a href={npmPackage.homepage}>{npmPackage.name}</a> {npmPackage.version}</span>
+                        <span>{ServerWeb.CONFIG.title} {ServerWeb.CONFIG.version}</span><br></br>
+                        <span>powered by <a href={npmPackage.homepage}>{npmPackage.name}</a> {this.renderPackageVersion()}</span>
                     </div>
                 </div>
 
