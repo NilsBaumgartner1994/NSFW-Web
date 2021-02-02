@@ -1,7 +1,6 @@
 import "regenerator-runtime/runtime.js";
 import React, {Component} from 'react';
 import App from './App';
-import ReactDOM from 'react-dom';
 import ScrollToTop from './showcase/scrolltotop/ScrollToTop';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ReactComponentToHTMLImageRenderer from "./helper/ReactComponentToHTMLImageRenderer";
@@ -25,7 +24,7 @@ export default class ServerWeb extends Component{
         document.title = ServerWeb.CONFIG.title || "";
     }
 
-    static start(){
+    static start(ReactDOM){
         let port = window.location.port;
         if(!!port && port===""+3000){
             let newAddress = window.location.protocol+'//'+window.location.hostname;
