@@ -49,7 +49,17 @@ export default class DefaultResourceDatatable extends Component {
         this.loadConfigs();
     }
 
-    getPreSelectedResourceMap(preSelectedResources,routes,scheme){
+    parseResourcesToKeyMapWithoutScheme(preSelectedResources){
+        let preSelectedResourceMap =  {};
+        for(let i=0; i<preSelectedResources.length; i++){
+            let resource = preSelectedResources[i];
+            let key = this.getResourceKey(resource);
+            preSelectedResourceMap[key] = true;
+        }
+        return preSelectedResourceMap;
+    }
+
+    parseResourcesToSelectionMap(preSelectedResources, routes, scheme){
         let preSelectedResourceMap =  {};
         if(!!preSelectedResources && !!routes && !!scheme){
             for(let i=0; i<preSelectedResources.length; i++){
@@ -57,8 +67,8 @@ export default class DefaultResourceDatatable extends Component {
                 let route = this.getInstanceRoute(resource,routes,scheme);
                 preSelectedResourceMap[route] = resource;
             }
-        } else if(!!preSelectedResourceMap){
-            return preSelectedResourceMap;
+        } else if(!!preSelectedResources){
+            return this.parseResourcesToKeyMapWithoutScheme(preSelectedResources);
         }
         return preSelectedResourceMap;
     }
@@ -67,7 +77,8 @@ export default class DefaultResourceDatatable extends Component {
         let scheme = await NSFWConnector.getScheme(this.props.tableName);
         let routes = await NSFWConnector.getSchemeRoutes(this.props.tableName);
         let countAnswer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_GET,"models/"+"count/"+this.props.tableName);
-        let preSelectedResourceMap = this.getPreSelectedResourceMap(this.props.preSelectedResources,routes,scheme);
+        let preSelectedResourceMap = this.parseResourcesToSelectionMap(this.props.preSelectedResources,routes,scheme);
+        let selectedResourceMap = this.parseResourcesToSelectionMap(this.props.selectedResourcesMap,routes,scheme);
 
         let count = 0;
         if(RequestHelper.isSuccess(countAnswer)){
@@ -95,6 +106,7 @@ export default class DefaultResourceDatatable extends Component {
             count: count,
             routes: routes,
             preSelectedResourceMap: preSelectedResourceMap,
+            selectedResourcesMap: selectedResourceMap,
             selectedColumns: selectedColumns,
             attributeKeys: attributeKeys,
         });
