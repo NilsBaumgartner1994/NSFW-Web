@@ -50,7 +50,6 @@ export default class DefaultResourceDatatable extends Component {
     }
 
     parseResourcesToKeyMapWithoutScheme(preSelectedResources){
-        console.log("parseResourcesToKeyMapWithoutScheme");
         let preSelectedResourceMap =  {};
         for(let i=0; i<preSelectedResources.length; i++){
             let resource = preSelectedResources[i];
@@ -61,9 +60,6 @@ export default class DefaultResourceDatatable extends Component {
     }
 
     parseResourcesToSelectionMap(preSelectedResources, routes, scheme){
-        console.log("parseResourcesToSelectionMap");
-        console.log(routes);
-        console.log(scheme);
         let preSelectedResourceMap =  {};
         if(!!preSelectedResources && !!routes && !!scheme){
             for(let i=0; i<preSelectedResources.length; i++){
@@ -82,9 +78,7 @@ export default class DefaultResourceDatatable extends Component {
         let routes = await NSFWConnector.getSchemeRoutes(this.props.tableName);
         let countAnswer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_GET,"models/"+"count/"+this.props.tableName);
         let preSelectedResourceMap = this.parseResourcesToSelectionMap(this.props.preSelectedResources,routes,scheme);
-        let selectedResourceMap = this.parseResourcesToSelectionMap(this.props.selectedResourcesMap,routes,scheme);
-        console.log("Selected Resource Map after loadConfigs");
-        console.log(selectedResourceMap);
+        let selectedResourceMap = this.parseResourcesToSelectionMap(this.props.selectedResources,routes,scheme);
 
         let count = 0;
         if(RequestHelper.isSuccess(countAnswer)){
