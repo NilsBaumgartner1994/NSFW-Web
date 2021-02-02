@@ -54,7 +54,7 @@ export default class DefaultResourceDatatable extends Component {
         for(let i=0; i<preSelectedResources.length; i++){
             let resource = preSelectedResources[i];
             let key = this.getResourceKey(resource);
-            preSelectedResourceMap[key] = true;
+            preSelectedResourceMap[key] = resource;
         }
         return preSelectedResourceMap;
     }
@@ -78,7 +78,7 @@ export default class DefaultResourceDatatable extends Component {
         let routes = await NSFWConnector.getSchemeRoutes(this.props.tableName);
         let countAnswer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_GET,"models/"+"count/"+this.props.tableName);
         let preSelectedResourceMap = this.parseResourcesToSelectionMap(this.props.preSelectedResources,routes,scheme);
-        let selectedResourceMap = this.parseResourcesToSelectionMap(this.props.selectedResources,routes,scheme);
+        let selectedResourcesMap = this.parseResourcesToSelectionMap(this.props.selectedResources,routes,scheme);
 
         let count = 0;
         if(RequestHelper.isSuccess(countAnswer)){
@@ -106,7 +106,7 @@ export default class DefaultResourceDatatable extends Component {
             count: count,
             routes: routes,
             preSelectedResourceMap: preSelectedResourceMap,
-            selectedResourcesMap: selectedResourceMap,
+            selectedResourcesMap: selectedResourcesMap,
             selectedColumns: selectedColumns,
             attributeKeys: attributeKeys,
         });
@@ -360,7 +360,7 @@ export default class DefaultResourceDatatable extends Component {
 
                    paginator={!!this.props.resources} //this paginator is for given resources
                    first={this.state.offset} rows={this.state.limit} totalRecords={this.state.count}
-                   rowsPerPageOptions={[DefaultResourceDatatable.DEFAULT_ITEMS_PER_PAGE,25,50]}
+                   rowsPerPageOptions={[DefaultResourceDatatable.DEFAULT_ITEMS_PER_PAGE,25,50,100,250,1000,1000000]}
                    onPageChange={(e) => this.handlePaginationChanged(e)}
 
                    value={this.state.resources}
