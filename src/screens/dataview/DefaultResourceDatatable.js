@@ -57,6 +57,8 @@ export default class DefaultResourceDatatable extends Component {
                 let route = this.getInstanceRoute(resource,routes,scheme);
                 preSelectedResourceMap[route] = resource;
             }
+        } else if(!!preSelectedResourceMap){
+            return preSelectedResourceMap;
         }
         return preSelectedResourceMap;
     }
