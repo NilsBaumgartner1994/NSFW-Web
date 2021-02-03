@@ -10,7 +10,7 @@ module.exports = {
     DateHelper: require('./helper/DateHelper').default, // eslint-disable-line global-require
     ZipDownloader: require('./helper/ZipDownloader').default, // eslint-disable-line global-require
     ZipExtractHelper: require('./helper/ZipExtractHelper').default, // eslint-disable-line global-require
-
+    DownloadHelper: require('./helper/DownloadHelper').default, // eslint-disable-line global-require
 
     NumberHelper: require('./helper/NumberHelper').default, // eslint-disable-line global-require
     WindowHelper: require('./helper/WindowHelper').default, // eslint-disable-line global-require

@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import DownloadHelper from "./DownloadHelper";
 
 export default class DatatableDownloader extends Component {
 
@@ -22,13 +23,7 @@ export default class DatatableDownloader extends Component {
         csv = csv.join('\r\n')
 
         console.log(csv)
-
-        let encodedData = encodeURIComponent(csv);
-        let dataStr = "data:text/json;charset=utf-8," + encodedData;
-        let link = document.createElement("a");
-        link.setAttribute("download", fileName + ".csv");
-        link.setAttribute("href", dataStr);
-        link.click();
+        DownloadHelper.downloadTextAsFiletile(csv,fileName + ".csv");
     }
 
 }
