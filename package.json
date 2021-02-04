@@ -113,7 +113,6 @@
     "react-show-more-text": "^1.4.6",
     "react-smooth-collapse": "^2.1.0",
     "react-test-render-fns": "0.0.0",
-    "react-test-renderer": "^17.0.1",
     "react-time-line": "github:NilsBaumgartner1994/react-time-line",
     "react-truncate": "^2.4.0",
     "regenerator-runtime": "^0.10.5",

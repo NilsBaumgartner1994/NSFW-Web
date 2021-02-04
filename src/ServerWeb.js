@@ -4,6 +4,7 @@ import App from './App';
 import ScrollToTop from './showcase/scrolltotop/ScrollToTop';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ReactComponentToHTMLImageRenderer from "./helper/ReactComponentToHTMLImageRenderer";
+import {MyStorage} from "nsfw-connector";
 
 export default class ServerWeb extends Component{
 
@@ -16,6 +17,10 @@ export default class ServerWeb extends Component{
         if(!!props.config){
             ServerWeb.setConfig(props.config);
         }
+    }
+
+    static getNSFWConnectorMyStorage(){
+        return MyStorage;
     }
 
     static setConfig(config){
