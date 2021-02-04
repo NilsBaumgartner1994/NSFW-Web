@@ -94,8 +94,16 @@ export default class App extends Component {
         let loggedIn = await AuthConnector.isLoggedInUser();
         let schemes = await NSFWConnector.getSchemes() || {};
         let tableNames = Object.keys(schemes);
+
+        let currentUser = await MyStorage.getCurrentUser(); //after isLoggedInUser !
+        let displayName = "Mr. Nobody";
+        if(!!currentUser){
+            displayName = currentUser.displayName;
+        }
+
         this.setState({
             tableNames: tableNames,
+            displayName: displayName,
             schemes: schemes,
             loggedIn: loggedIn,
             loading: false,
@@ -328,12 +336,6 @@ export default class App extends Component {
         }
         console.log("Show logged in App");
 
-        let currentUser = MyStorage.getCurrentUser();
-        let displayName = "What ?";
-        if(!!currentUser){
-            displayName = currentUser.displayName;
-        }
-
         return (
             <div className="layout-wrapper">
                 <Growl ref={(el) => App.growl = el} />
@@ -349,7 +351,7 @@ export default class App extends Component {
 
                     <ul className="topbar-menu p-unselectable-text">
                         <li>
-                            <div>{displayName}</div>
+                            <div>{this.state.displayName}</div>
                         </li>
                         <li>
                             <Link to="/support">SUPPORT</Link>
