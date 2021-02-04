@@ -103,6 +103,7 @@ export default class Login extends Component {
         authObject["authMethod"] = this.state.selectedAuth;
 
         let authAnswer = await AuthConnector.authorize(authObject,this.state.rememberMe);
+        console.log("handleSubmitevents finished");
 
         let nextState = {
             loggingInProceeding: false,
@@ -110,7 +111,10 @@ export default class Login extends Component {
         };
 
         if(RequestHelper.isSuccess(authAnswer)){
+            console.log("Login seems successfull")
             let currentUser = await MyStorage.getCurrentUser();
+            console.log("Current user is");
+            console.log(currentUser);
             nextState.currentUser = currentUser;
             await App.AppInstance.setLoggedInState(true);
         }
