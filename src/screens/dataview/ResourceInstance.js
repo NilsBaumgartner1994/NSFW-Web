@@ -21,7 +21,8 @@ import {
     ResourceAssociationHelper,
     RouteHelper,
     SchemeHelper,
-    NSFWResource
+    NSFWResource,
+    ResourceHelper
 } from "nsfw-connector";
 
 export default class ResourceInstance extends Component {
@@ -266,9 +267,11 @@ export default class ResourceInstance extends Component {
         let overlaypanelIDView = overlaypanelID+"View";
         let overlaypanelIDAddNew = overlaypanelID+"AddNew";
         let overlaypanelIDRemove = overlaypanelID+"Remove";
+        let overlaypanelIDDelete = overlaypanelID+"Delete";
 
         let addCallbackFunction = this.handleAddAssociationsMultiple.bind(this,overlaypanelIDAddNew,associationTableName,associationName);
         let removeCallbackFunction = this.handleRemoveAssociationsMultiple.bind(this,overlaypanelIDRemove,associationTableName,associationName);
+        let deleteCallbackFunction = this.handleDeleteAssociationsMultiple.bind(this,overlaypanelIDRemove,associationTableName,associationName);
 
         let noAssociations = amount===0;
 
@@ -287,11 +290,15 @@ export default class ResourceInstance extends Component {
                     <OverlayPanel style={AssociationIndexOverlay.defaultStyle}  showCloseIcon={true} ref={(el) => this[overlaypanelIDRemove] = el}>
                         <AssociationIndexOverlay key={overlaypanelIDRemove + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_REMOVE_MULTIPLE} callbackFunction={removeCallbackFunction} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources}/>
                     </OverlayPanel>
+                    <OverlayPanel style={AssociationIndexOverlay.defaultStyle}  showCloseIcon={true} ref={(el) => this[overlaypanelIDDelete] = el}>
+                        <AssociationIndexOverlay key={overlaypanelIDDelete + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_REMOVE_MULTIPLE} callbackFunction={deleteCallbackFunction} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources}/>
+                    </OverlayPanel>
 
                     <Button style={{"margin-right":"1em"}} type="button" icon="pi pi-plus" className="p-button-success" label="Create & Add" onClick={(e) => this[overlaypanelIDCreateAndAdd].toggle(e)} />
                     <Button style={{"margin-right":"1em"}} disabled={noAssociations} type="button" icon="pi pi-search" label="View" onClick={(e) => this[overlaypanelIDView].toggle(e)} />
                     <Button style={{"margin-right":"1em"}} type="button" icon="pi pi-plus" className="p-button-success" label="Add" onClick={(e) => this[overlaypanelIDAddNew].toggle(e)} />
                     <Button style={{"margin-right":"1em"}} disabled={noAssociations} type="button" icon="pi pi-minus" className="p-button-danger" label="Remove" onClick={(e) => this[overlaypanelIDRemove].toggle(e)} />
+                    <Button style={{"margin-right":"1em"}} disabled={noAssociations} type="button" icon="pi pi-trash" className="p-button-danger" label="Delete" onClick={(e) => this[overlaypanelIDDelete].toggle(e)} />
 
                 </Card>
             </div>
@@ -343,6 +350,22 @@ export default class ResourceInstance extends Component {
         this.reloadPage();
     }
 
+    async handleDeleteAssociationsMultiple(overlaypanelID,associationTableName,associationName,associationResources){
+        let responseJSON = await ResourceHelper.handleRequestTypeOnMultipleResources(associationResources, RequestHelper.REQUEST_TYPE_DELETE, null, null);
+        let amountSuccess = responseJSON.success.length;
+        let amountErrors = responseJSON.errors.length;
+
+        if(amountSuccess>0){
+            App.addToastMessage("Success",amountSuccess+" "+associationName+" removed");
+        }
+        if(amountErrors>0){
+            App.addToastMessage("Error ",amountErrors+" "+associationName+" not added","error");
+        }
+
+        this[overlaypanelID].hide();
+        this.reloadPage();
+    }
+
     renderAssociationCardSingle(associationTableName,associationName){
         let resource = this.state.associationResources[associationName];
         let modelscheme = this.state.associationSchemes[associationTableName];
@@ -361,6 +384,7 @@ export default class ResourceInstance extends Component {
 
         let addCallbackFunction = this.handleSetAssociationsSingle.bind(this,overlaypanelIDAddNew,associationTableName,associationName);
         let removeCallbackFunction = this.handleRemoveAssociationsSingle.bind(this,associationTableName,associationName);
+        let deleteCallbackFunction = this.handleDeleteAssociationsSingle.bind(this,associationTableName,associationName, resource);
 
         return(
             <div className="p-col-12">
@@ -379,6 +403,7 @@ export default class ResourceInstance extends Component {
                     <Button style={{"margin-right":"1em"}} disabled={!isAssociated} type="button" icon="pi pi-search" label="View" onClick={(e) => this[overlaypanelIDView].toggle(e)} />
                     <Button style={{"margin-right":"1em"}} disabled={isAssociated} className="p-button-success" type="button" icon="pi pi-plus" label="Set" onClick={(e) => this[overlaypanelIDAddNew].toggle(e)} />
                     <Button style={{"margin-right":"1em"}} disabled={!isAssociated} className="p-button-danger" type="button" icon="pi pi-minus" label="Remove" onClick={(e) => removeCallbackFunction()} />
+                    <Button style={{"margin-right":"1em"}} disabled={!isAssociated} className="p-button-danger" type="button" icon="pi pi-trash" label="Delete" onClick={(e) => deleteCallbackFunction()} />
 
                 </Card>
             </div>
@@ -404,6 +429,17 @@ export default class ResourceInstance extends Component {
     async handleRemoveAssociationsSingle(associationTableName,associationName){
         let route = RouteHelper.getIndexRouteForAssociation(this.state.schemes,this.state.scheme,this.state.tableName,this.resource,associationName);
         let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_DELETE,route);
+
+        if(RequestHelper.isSuccess(answer)){
+            App.addToastMessage("Success",associationName+" removed");
+            this.reloadPage();
+        } else {
+            App.addToastMessage("Error",associationName+" not removed","error");
+        }
+    }
+
+    async handleDeleteAssociationsSingle(associationTableName,associationName, resource){
+        let answer = await resource.destroy();
 
         if(RequestHelper.isSuccess(answer)){
             App.addToastMessage("Success",associationName+" removed");

@@ -119,7 +119,7 @@ export default class ResourceIndex extends Component {
             amountResources = ownSelectedResources.length;
             for(let i=0; i<amountResources; i++){
                 let resource = ownSelectedResources[i];
-                let resourceClass = new NSFWResource(tableName, resource);
+                let resourceClass = new NSFWResource(tableName);
                 await resourceClass._setSynchronizedResource(resource);
                 let answer = await resourceClass.destroy();
                 if(RequestHelper.isSuccess(answer)){
