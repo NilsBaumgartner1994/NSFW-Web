@@ -72,7 +72,7 @@
     "not op_mini all"
   ],
   "peerDependencies": {
-    "nsfw-connector": "^1.0.21",
+    "nsfw-connector": "^1.0.22",
     "primereact": "4.2.2",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
