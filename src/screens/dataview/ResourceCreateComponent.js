@@ -66,8 +66,8 @@ export default class ResourceCreateComponent extends Component {
             this.growl.show({severity: 'success', summary: 'Success', detail: 'Changes saved'});
             //TODO Go To Instance Side
             let resource = answer.data;
-            let resourceClass = new NSFWResource(this.props.tableName, resource);
-            await resourceClass.load();
+            let resourceClass = new NSFWResource(this.props.tableName);
+            await resourceClass.loadByResource(resource);
 
             this.setState({
                 resource: resourceClass,
