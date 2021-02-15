@@ -14,7 +14,15 @@ import ResourceCreateComponent from "./ResourceCreateComponent";
 import EditableField from "./EditableField";
 import Customization from "../dataviewCustomization/Customization";
 
-import {RouteHelper, NSFWConnector, APIRequest, RequestHelper, SchemeHelper, ResourceAssociationHelper} from "nsfw-connector";
+import {
+    APIRequest,
+    NSFWConnector,
+    RequestHelper,
+    ResourceAssociationHelper,
+    RouteHelper,
+    SchemeHelper,
+    NSFWRresource
+} from "nsfw-connector";
 
 export default class ResourceInstance extends Component {
 
@@ -48,32 +56,20 @@ export default class ResourceInstance extends Component {
     }
 
     async loadResources(params){
-        let route = RouteHelper.getInstanceRouteForParams(this.state.schemes,this.state.tableName,params);
-        let resource = null;
-        let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_GET,route);
-        if(RequestHelper.isSuccess(answer)){
-            resource = answer.data;
-
+        this.resource = new NSFWRresource(this.state.tableName, params);
+        await this.resource.load();
+        if(this.resource.isSynchronized()){
             let scheme = await NSFWConnector.getScheme(this.state.tableName);
             let schemes = await NSFWConnector.getSchemes();
             let associations = await NSFWConnector.getSchemeAssociations(this.state.tableName);
-            let associationResources = await this.loadAssociationResources(route,associations);
+            let associationResources = await this.loadAssociationResources(associations);
             let associationSchemes = await this.loadAssociationSchemes(associations);
-
-            console.log("resource");
-            console.log(resource);
-            console.log("associationResources");
-            console.log(associationResources);
-
-            this.resource = resource;
 
             this.setState({
                 isLoading: false,
-                resourceCopy: JSON.parse(JSON.stringify(resource)),
                 associations: associations,
                 associationResources: associationResources,
                 associationSchemes: associationSchemes,
-                route: route,
                 scheme: scheme,
                 schemes: schemes,
                 params: params,
@@ -94,20 +90,19 @@ export default class ResourceInstance extends Component {
         for(let i=0; i<associationTableNames.length; i++){
             let key = associationTableNames[i];
             let associationTableName = associations[key]["target"];
-            let scheme = await NSFWConnector.getScheme(associationTableName);
-            associationSchemes[associationTableName] = scheme;
+            associationSchemes[associationTableName] = await NSFWConnector.getScheme(associationTableName);
         }
         return associationSchemes;
     }
 
-    async loadAssociationResources(route,associations){
+    async loadAssociationResources(associations){
         let associationResources = {};
 
         let associationTableNames = Object.keys(associations);
         for(let i=0; i<associationTableNames.length; i++){
             let key = associationTableNames[i];
             let associationName = associations[key]["associationName"];
-            let answer = await this.loadAssociation(route,associationName);
+            let answer = await this.loadAssociation(associationName);
             if(!!answer && !answer.error){
                 associationResources[associationName] = answer;
             } else {
@@ -117,20 +112,12 @@ export default class ResourceInstance extends Component {
         return associationResources;
     }
 
-    async loadAssociation(route,associationName){
-        route = route+"/associations/"+associationName;
-        let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_GET,route);
-        if(RequestHelper.isSuccess(answer)){
-            return answer.data;
-        } else {
-            return null;
-        }
+    async loadAssociation(associationName){
+        return await ResourceAssociationHelper.handleGetAssociationsForResource(this.resource, associationName);
     }
 
     async updateResource(){
-        let resource = this.resource;
-        let payloadJSON = resource;
-        let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_PUT,this.state.route,payloadJSON);
+        let answer = await this.resource.save();
         if(!RequestHelper.isSuccess(answer)){
             this.setState({
                 requestPending: false,
@@ -138,10 +125,7 @@ export default class ResourceInstance extends Component {
             let detail = !answer ? 'Unkown error!' : answer.error;
             App.addToastMessage("Error",detail,"error");
         } else {
-            this.resource = answer.data;
-
             this.setState({
-                resourceCopy: answer.data,
                 isEdited: false,
                 requestPending: false,
             });
@@ -163,7 +147,7 @@ export default class ResourceInstance extends Component {
     }
 
     resetResource(){
-        this.resource = JSON.parse(JSON.stringify(this.state.resourceCopy));
+        this.resource.resetResource();
         this.setState({
             isEdited: false,
             jsonEditorsVisible: {},
@@ -294,13 +278,13 @@ export default class ResourceInstance extends Component {
                         <ResourceCreateComponent schemes={this.state.schemes} tableName={associationTableName} onHandleResourceCreated={(resource) => {addCallbackFunction([resource]);}} />
                     </OverlayPanel>
                     <OverlayPanel style={AssociationIndexOverlay.defaultStyle} showCloseIcon={true} ref={(el) => this[overlaypanelIDView] = el}>
-                        <AssociationIndexOverlay key={overlaypanelIDView+this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_View} showOnlyAssociated={true} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources}></AssociationIndexOverlay>
+                        <AssociationIndexOverlay key={overlaypanelIDView + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_View} showOnlyAssociated={true} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources}/>
                     </OverlayPanel>
                     <OverlayPanel style={AssociationIndexOverlay.defaultStyle}  showCloseIcon={true} ref={(el) => this[overlaypanelIDAddNew] = el}>
-                        <AssociationIndexOverlay key={overlaypanelIDAddNew+this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_ADD_MULTIPLE} callbackFunction={addCallbackFunction} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources} ></AssociationIndexOverlay>
+                        <AssociationIndexOverlay key={overlaypanelIDAddNew + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_ADD_MULTIPLE} callbackFunction={addCallbackFunction} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources} />
                     </OverlayPanel>
                     <OverlayPanel style={AssociationIndexOverlay.defaultStyle}  showCloseIcon={true} ref={(el) => this[overlaypanelIDRemove] = el}>
-                        <AssociationIndexOverlay key={overlaypanelIDRemove+this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_REMOVE_MULTIPLE} callbackFunction={removeCallbackFunction} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources}></AssociationIndexOverlay>
+                        <AssociationIndexOverlay key={overlaypanelIDRemove + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_REMOVE_MULTIPLE} callbackFunction={removeCallbackFunction} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources}/>
                     </OverlayPanel>
 
                     <Button style={{"margin-right":"1em"}} type="button" icon="pi pi-plus" className="p-button-success" label="Create & Add" onClick={(e) => this[overlaypanelIDCreateAndAdd].toggle(e)} />
@@ -386,10 +370,10 @@ export default class ResourceInstance extends Component {
                         <ResourceCreateComponent schemes={this.state.schemes} tableName={associationTableName} onHandleResourceCreated={(resource) => {addCallbackFunction([resource]);}} />
                     </OverlayPanel>
                     <OverlayPanel style={{"margin-right":"0.769em"}} showCloseIcon={true} ref={(el) => this[overlaypanelIDView] = el}>
-                        <AssociationIndexOverlay key={overlaypanelIDView+this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_View} headerText={"Associated "+associationTableName} tableName={associationTableName} associatedResources={associatedResources}></AssociationIndexOverlay>
+                        <AssociationIndexOverlay key={overlaypanelIDView + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_View} headerText={"Associated " + associationTableName} tableName={associationTableName} associatedResources={associatedResources}/>
                     </OverlayPanel>
                     <OverlayPanel style={{"margin-right":"0.769em"}} showCloseIcon={true} ref={(el) => this[overlaypanelIDAddNew] = el}>
-                        <AssociationIndexOverlay key={overlaypanelIDAddNew+this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_SET_SINGLE} callbackFunction={addCallbackFunction} tableName={associationTableName} associatedResources={associatedResources}></AssociationIndexOverlay>
+                        <AssociationIndexOverlay key={overlaypanelIDAddNew + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_SET_SINGLE} callbackFunction={addCallbackFunction} tableName={associationTableName} associatedResources={associatedResources}/>
                     </OverlayPanel>
 
                     <Button style={{"margin-right":"1em"}} disabled={isAssociated} className="p-button-success" type="button" icon="pi pi-plus" label="Create & Set" onClick={(e) => this[overlaypanelIDCreateAndSet].toggle(e)} />
@@ -465,7 +449,7 @@ export default class ResourceInstance extends Component {
         const footer = (
             <div>
                 <Button label="Yes" icon="pi pi-check" className="p-button-danger p-button-raised" onClick={() => {this.setState({visibleDialogDeleteUser: false}); this.deleteThisResource(); }} />
-                <Button label="No" icon="pi pi-times" className="p-button-info p-button-raised" onClick={() => {this.setState({visibleDialogDeleteUser: false}); }} className="p-button-secondary" />
+                <Button label="No" icon="pi pi-times" className="p-button-info p-button-raised p-button-secondary" onClick={() => {this.setState({visibleDialogDeleteUser: false}); }} />
             </div>
         );
 
@@ -509,13 +493,6 @@ export default class ResourceInstance extends Component {
         if(this.state.isNotFound){
             return <HeaderTemplate title={"404 Error"} subtitle={"The resource you are looking for does not exist :-("} />
         }
-
-        const t = `
-pie title Pets adopted by volunteers
-    "Dogs" : 386
-    "Cats" : 85
-    "Rats" : 15
-`;
 
         return (
             <div>

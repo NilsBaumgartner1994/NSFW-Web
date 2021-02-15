@@ -7,7 +7,7 @@ import {Button} from 'primereact/button';
 import WindowHelper from "../../helper/WindowHelper";
 import EditableField from "./EditableField";
 
-import {RouteHelper, NSFWConnector, APIRequest, RequestHelper, SchemeHelper} from "nsfw-connector";
+import {RouteHelper, NSFWConnector, APIRequest, RequestHelper, SchemeHelper, NSFWResource} from "nsfw-connector";
 
 
 export default class ResourceCreateComponent extends Component {
@@ -66,15 +66,18 @@ export default class ResourceCreateComponent extends Component {
             this.growl.show({severity: 'success', summary: 'Success', detail: 'Changes saved'});
             //TODO Go To Instance Side
             let resource = answer.data;
+            let resourceClass = new NSFWResource(this.props.tableName, resource);
+            await resourceClass.load();
+
             this.setState({
-                resource: resource,
+                resource: resourceClass,
                 requestPending: false,
             });
             if(!this.props.blockOpenWindowNewResource){
-                WindowHelper.openUrl(this.getInstanceRoute(resource));
+                WindowHelper.openUrl(this.getInstanceRoute(resourceClass));
             }
             if(!!this.props.onHandleResourceCreated){
-                this.props.onHandleResourceCreated(resource);
+                this.props.onHandleResourceCreated(resourceClass);
             }
         }
     }
@@ -122,8 +125,8 @@ export default class ResourceCreateComponent extends Component {
     }
 
     resetResource(){
+        this.resource.resetResource();
         this.setState({
-            resource: JSON.parse(JSON.stringify(this.state.resourceCopy)),
             isEdited: false,
             jsonEditorsVisible: {},
             jsonEditorsValues: {},

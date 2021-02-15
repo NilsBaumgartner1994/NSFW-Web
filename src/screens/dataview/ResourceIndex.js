@@ -5,7 +5,7 @@ import WindowHelper from "../../helper/WindowHelper";
 import {Dialog} from "primereact/dialog";
 import App from "../../App";
 
-import {RouteHelper, NSFWConnector, APIRequest, RequestHelper} from "nsfw-connector";
+import {RouteHelper, NSFWConnector, APIRequest, RequestHelper, NSFWResource} from "nsfw-connector";
 
 export default class ResourceIndex extends Component {
 
@@ -119,8 +119,9 @@ export default class ResourceIndex extends Component {
             amountResources = ownSelectedResources.length;
             for(let i=0; i<amountResources; i++){
                 let resource = ownSelectedResources[i];
-                let route = RouteHelper.getInstanceRouteForResource(this.state.schemes,this.state.scheme,tableName,resource);
-                let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_DELETE,route);
+                let resourceClass = new NSFWResource(tableName, resource);
+                await resourceClass._setSynchronizedResource(resource);
+                let answer = await resourceClass.destroy();
                 if(RequestHelper.isSuccess(answer)){
                     amountSuccess++;
                 }
