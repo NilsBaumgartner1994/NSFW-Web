@@ -119,9 +119,8 @@ export default class ResourceIndex extends Component {
             amountResources = ownSelectedResources.length;
             for(let i=0; i<amountResources; i++){
                 let resource = ownSelectedResources[i];
-                let resourceClass = new NSFWResource(tableName);
-                await resourceClass._setSynchronizedResource(resource);
-                let answer = await resourceClass.destroy();
+                let route = RouteHelper.getInstanceRouteForResource(this.state.schemes,this.state.scheme,tableName,resource);
+                let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_DELETE,route);
                 if(RequestHelper.isSuccess(answer)){
                     amountSuccess++;
                 }
