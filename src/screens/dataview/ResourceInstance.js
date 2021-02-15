@@ -102,7 +102,8 @@ export default class ResourceInstance extends Component {
         for(let i=0; i<associationTableNames.length; i++){
             let key = associationTableNames[i];
             let associationName = associations[key]["associationName"];
-            let answer = await this.loadAssociation(associationName);
+            let associationTableName = associations[key]["target"];
+            let answer = await this.loadAssociation(associationName, associationTableName);
             if(!!answer && !answer.error){
                 associationResources[associationName] = answer;
             } else {
@@ -112,8 +113,8 @@ export default class ResourceInstance extends Component {
         return associationResources;
     }
 
-    async loadAssociation(associationName){
-        return await ResourceAssociationHelper.handleGetAssociationsForResource(this.resource, associationName, null);
+    async loadAssociation(associationName, associationTableName){
+        return await ResourceAssociationHelper.handleGetAssociationsForResource(this.resource, associationName, associationTableName, null);
     }
 
     async updateResource(){
