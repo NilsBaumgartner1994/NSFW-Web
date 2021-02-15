@@ -113,7 +113,7 @@ export default class ResourceInstance extends Component {
     }
 
     async loadAssociation(associationName){
-        return await ResourceAssociationHelper.handleGetAssociationsForResource(this.resource, associationName);
+        return await ResourceAssociationHelper.handleGetAssociationsForResource(this.resource, associationName, null);
     }
 
     async updateResource(){
@@ -300,7 +300,6 @@ export default class ResourceInstance extends Component {
     async handleAddAssociationsMultiple(overlaypanelID,associationTableName,associationName,associationResources){
         let responseJSON = await ResourceAssociationHelper.handleRequestTypeOnMultiplePluralAssociation(
             this.resource,
-            this.state.tableName,
             associationTableName,
             associationName,
             associationResources,
@@ -323,7 +322,6 @@ export default class ResourceInstance extends Component {
     async handleRemoveAssociationsMultiple(overlaypanelID,associationTableName,associationName,associationResources){
         let responseJSON = await ResourceAssociationHelper.handleRequestTypeOnMultiplePluralAssociation(
             this.resource,
-            this.state.tableName,
             associationTableName,
             associationName,
             associationResources,
