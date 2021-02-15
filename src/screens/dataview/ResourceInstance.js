@@ -21,7 +21,7 @@ import {
     ResourceAssociationHelper,
     RouteHelper,
     SchemeHelper,
-    NSFWRresource
+    NSFWResource
 } from "nsfw-connector";
 
 export default class ResourceInstance extends Component {
@@ -56,7 +56,7 @@ export default class ResourceInstance extends Component {
     }
 
     async loadResources(params){
-        this.resource = new NSFWRresource(this.state.tableName);
+        this.resource = new NSFWResource(this.state.tableName);
         await this.resource.loadByParams(params);
         if(this.resource.isSynchronized()){
             let scheme = await NSFWConnector.getScheme(this.state.tableName);
