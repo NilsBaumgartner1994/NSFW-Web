@@ -4,8 +4,7 @@ import {Link} from 'react-router-dom';
 
 import {Button} from 'primereact/button';
 
-import {APIRequest, RequestHelper, SchemeHelper} from "nsfw-connector";
-import NSFWResource from "nsfw-connector/src/NSFWResource";
+import {APIRequest, RequestHelper, SchemeHelper, NSFWResource} from "nsfw-connector";
 
 export default class DataTableHelper extends Component {
 
