@@ -291,7 +291,7 @@ export default class ResourceInstance extends Component {
                         <AssociationIndexOverlay key={overlaypanelIDRemove + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_REMOVE_MULTIPLE} callbackFunction={removeCallbackFunction} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources}/>
                     </OverlayPanel>
                     <OverlayPanel style={AssociationIndexOverlay.defaultStyle}  showCloseIcon={true} ref={(el) => this[overlaypanelIDDelete] = el}>
-                        <AssociationIndexOverlay key={overlaypanelIDDelete + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_REMOVE_MULTIPLE} callbackFunction={deleteCallbackFunction} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources}/>
+                        <AssociationIndexOverlay key={overlaypanelIDDelete + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_DELETE_MULTIPLE} callbackFunction={deleteCallbackFunction} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources}/>
                     </OverlayPanel>
 
                     <Button style={{"margin-right":"1em"}} type="button" icon="pi pi-plus" className="p-button-success" label="Create & Add" onClick={(e) => this[overlaypanelIDCreateAndAdd].toggle(e)} />

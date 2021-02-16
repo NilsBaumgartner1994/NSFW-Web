@@ -9,6 +9,7 @@ export default class AssociationIndexOverlay extends Component {
     static TABLETYPE_ADD_MULTIPLE = "AddMultiple";
     static TABLETYPE_SET_SINGLE = "SetSingle";
     static TABLETYPE_REMOVE_MULTIPLE = "RemoveMultiple";
+    static TABLETYPE_DELETE_MULTIPLE = "DeleteMultiple";
 
     static MENUDATA_FOR_TABLETYPE = {
         [AssociationIndexOverlay.TABLETYPE_ADD_MULTIPLE]: {
@@ -22,6 +23,10 @@ export default class AssociationIndexOverlay extends Component {
         [AssociationIndexOverlay.TABLETYPE_REMOVE_MULTIPLE]: {
             label: "Disassociate",
             icon: "pi pi-minus"
+        },
+        [AssociationIndexOverlay.TABLETYPE_DELETE_MULTIPLE]: {
+            label: "Delete",
+            icon: "pi pi-trash"
         },
     }
 

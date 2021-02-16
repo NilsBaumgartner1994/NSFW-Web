@@ -21,7 +21,6 @@
     "@fullcalendar/interaction": "4.0.1",
     "@fullcalendar/timegrid": "4.0.1",
     "axios": "^0.21.1",
-    "babel-loader": "^8.2.2",
     "babel-polyfill": "^6.26.0",
     "chart.js": "2.7.3",
     "classnames": "^2.2.6",
@@ -54,6 +53,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rm -rf ./dist/ && webpack --mode development",
+    "start": "react-scripts start",
     "doc": "./node_modules/.bin/apidoc -i src/ -i models/ -i doc/customDocumentation/ -o doc/",
     "upload": "npm run build && npm version patch && npm publish"
   },
