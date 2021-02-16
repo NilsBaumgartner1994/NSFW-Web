@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom';
 import {Button} from 'primereact/button';
 
 import {APIRequest, RequestHelper, SchemeHelper} from "nsfw-connector";
+import NSFWResource from "nsfw-connector/src/NSFWResource";
 
 export default class DataTableHelper extends Component {
 
@@ -225,8 +226,17 @@ export default class DataTableHelper extends Component {
 
         let url = "models/"+tableName+"?"+limitParam+offsetParam+orderParam+filterParam;
         let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_GET,url);
-        if(RequestHelper.isSuccess(answer)){ // bei einem Problem
-            return answer.data;
+        if(RequestHelper.isSuccess(answer)){
+            let resourceList = answer.data;
+            let resourceClassList = [];
+            for(let i=0; i<resourceList.length; i++){
+                let resource = resourceList[i];
+                let resourceClass = new NSFWResource(tableName);
+                await resourceClass._setSynchronizedResource(resource);
+                resourceClassList.push(resourceClass);
+            }
+
+            return resourceClassList;
         } else {
             return []; // gebe leere Liste aus
         }
