@@ -104,6 +104,12 @@ export default class AppMenu extends Component {
         return <div>{linkList}</div>;
     }
 
+    renderServerFunctions(){
+        let linkList = [];
+        linkList.push(this.renderBulletLink("Backups",'/server/backups'));
+        return <div>{linkList}</div>;
+    }
+
     renderSidebarMenu(index, title, iconName, content){
         return (
                 [<button key={"renderSidebarMenu-"+index} id="data_menutitle" onClick={() => this.toggleMenu(index)}
@@ -150,7 +156,7 @@ export default class AppMenu extends Component {
     static ICON_MISC = "misc";
     static ICON_MULTIMDEIA = "multimedia";
     static ICON_OVERLAY = "overlay";
-    static ICON_PANEL = "pnael";
+    static ICON_PANEL = "panel";
 
     getSortedCustomMenuKeys(){
         let customMenuContents = AppMenu.CUSTOM_MENU_CONTENT;
@@ -202,6 +208,7 @@ export default class AppMenu extends Component {
                 {this.renderCustomMenuContentList(topMenuContent, -topMenuContent.length)}
                 {this.renderSidebarMenu(index++,"Tables",AppMenu.ICON_DATA,this.renderSchemesSingle())}
                 {this.renderSidebarMenu(index++,"Associations",AppMenu.ICON_DATA,this.renderSchemesAssociations())}
+                {this.renderSidebarMenu(index++,"Server",AppMenu.ICON_DATA,this.renderServerFunctions())}
                 {this.renderCustomMenuContentList(bottomMenuContent, index)}
             </div>
         );

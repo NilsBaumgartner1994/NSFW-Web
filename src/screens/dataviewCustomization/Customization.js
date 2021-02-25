@@ -13,7 +13,6 @@ export default class Customization extends Component {
         let tableName = parentState.tableName;
 
         const CustomComponent = App.DATAVIEW_CUSTOMIZATIONS[tableName];
-        console.log("Render Customization for: "+tableName);
 
         if (typeof CustomComponent !== "undefined") {
             return React.createElement(CustomComponent, {

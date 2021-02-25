@@ -25,6 +25,7 @@ import ResourceCreate from "./screens/dataview/ResourceCreate";
 import {RouteHelper, NSFWConnector, AuthConnector, MyStorage} from "nsfw-connector";
 import AppMenu from "./AppMenu";
 import ServerWeb from "./ServerWeb";
+import ServerRoutes from "./screens/server/ServerRoutes";
 
 export default class App extends Component {
 
@@ -135,6 +136,12 @@ export default class App extends Component {
             )
         }
 
+        return output;
+    }
+
+    renderServerRoutes(){
+        let output = [];
+        output = output.concat(ServerRoutes.configureRoutes("/server"))
         return output;
     }
 
@@ -376,6 +383,7 @@ export default class App extends Component {
 
                         {this.renderDatabaseRoutes()}
                         {this.renderCustomRoutes()}
+                        {this.renderServerRoutes()}
                     </Switch>
                     <div className="content-section layout-footer clearfix">
                         <span>{ServerWeb.CONFIG.title} {ServerWeb.CONFIG.version}</span><br></br>
