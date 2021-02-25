@@ -45,6 +45,7 @@
     "react-scripts": "^2.1.8",
     "react-transition-group": "^2.5.1",
     "webpack": "4.28.3",
+    "webpack-cli": "^3.3.12",
     "webpack-node-externals": "^1.7.2"
   },
   "description": "NodeJS Sequelize FrameWork Connector",
