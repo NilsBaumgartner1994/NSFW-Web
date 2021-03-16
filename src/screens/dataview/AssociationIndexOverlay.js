@@ -103,6 +103,7 @@ export default class AssociationIndexOverlay extends Component {
     render() {
         let resources = null;
         if(this.props.tableType===AssociationIndexOverlay.TABLETYPE_REMOVE_MULTIPLE ||
+            this.props.tableType===AssociationIndexOverlay.TABLETYPE_DELETE_MULTIPLE ||
             this.props.tableType===AssociationIndexOverlay.TABLETYPE_View
         ) {
             resources = this.props.associatedResources
