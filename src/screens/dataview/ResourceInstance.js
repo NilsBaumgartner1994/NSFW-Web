@@ -412,10 +412,13 @@ export default class ResourceInstance extends Component {
 
     async handleSetAssociationsSingle(overlaypanelID,associationTableName,associationName,associationResources){
         let associationModelscheme = this.state.associationSchemes[associationTableName];
+        console.log("handleSetAssociationsSingle");
         if(!!associationResources && associationResources.length===1){
             let associationResource = associationResources[0];
-            let route = RouteHelper.getInstanceRouteForAssociatedResource(this.state.schemes,this.state.scheme,this.state.tableName,this.resource,associationModelscheme,associationTableName,associationName,associationResource);
+
+            let route = RouteHelper.getInstanceRouteForAssociatedResource(this.state.schemes,this.resource,associationModelscheme,associationTableName,associationName,associationResource);
             let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_POST,route);
+
             if(RequestHelper.isSuccess(answer)){
                 App.addToastMessage("Success",associationName+" added");
                 this[overlaypanelID].hide();
@@ -427,7 +430,7 @@ export default class ResourceInstance extends Component {
     }
 
     async handleRemoveAssociationsSingle(associationTableName,associationName){
-        let route = RouteHelper.getIndexRouteForAssociation(this.state.schemes,this.state.scheme,this.state.tableName,this.resource,associationName);
+        let route = RouteHelper.getIndexRouteForAssociation(this.resource,associationName);
         let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_DELETE,route);
 
         if(RequestHelper.isSuccess(answer)){
