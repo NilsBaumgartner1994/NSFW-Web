@@ -18,5 +18,6 @@ module.exports = {
 
     EditableField: require('./screens/dataview/EditableField').default, // eslint-disable-line global-require
     DataTableHelper: require('./screens/dataview/DataTableHelper').default, // eslint-disable-line global-require
+    AssociationIndexOverlay: require('./screens/dataview/AssociationIndexOverlay').default, // eslint-disable-line global-require
     DefaultResourceDatatable: require('./screens/dataview/DefaultResourceDatatable').default, // eslint-disable-line global-require
 };

@@ -60,6 +60,9 @@ export default class AssociationIndexOverlay extends Component {
             command: () => {this.handleCallback(ownSelectedResources)}
         }
         actionItem = Object.assign({}, actionItem, AssociationIndexOverlay.MENUDATA_FOR_TABLETYPE[this.props.tableType]);
+        if(!!this.props.customActionLabel){
+            actionItem.label = this.props.customActionLabel;
+        }
         actionItem.label = actionItem.label + " ("+amount+")";
         return actionItem;
     }
@@ -129,6 +132,10 @@ export default class AssociationIndexOverlay extends Component {
         {
             onHandleImport = this.handleImportResource.bind(this);
         }
+        if(!!this.props.disableImport){
+            onHandleImport = null;
+        }
+
 
         return <div>
             <DefaultResourceDatatable
