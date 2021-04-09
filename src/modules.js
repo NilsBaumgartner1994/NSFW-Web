@@ -20,4 +20,5 @@ module.exports = {
     DataTableHelper: require('./screens/dataview/DataTableHelper').default, // eslint-disable-line global-require
     AssociationIndexOverlay: require('./screens/dataview/AssociationIndexOverlay').default, // eslint-disable-line global-require
     DefaultResourceDatatable: require('./screens/dataview/DefaultResourceDatatable').default, // eslint-disable-line global-require
+    ResourceCreateComponent: require('./screens/dataview/ResourceCreateComponent').default, // eslint-disable-line global-require
 };
