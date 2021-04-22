@@ -19,6 +19,7 @@ export default class DataTableHelper extends Component {
             if(!SchemeHelper.isPrimaryKey(scheme, field)){ //dont filter primary keys
                 let isUnimportant = false;
                 isUnimportant = SchemeHelper.isTypeJSON(scheme,field) ? true : isUnimportant; //JSON Fields are too big to be that important
+                isUnimportant = SchemeHelper.isTypeBLOB(scheme,field) ? true : isUnimportant; //BLOB Fields are too big to be that important
                 isUnimportant = SchemeHelper.isReferenceField(scheme,field) ? true : isUnimportant; //References which are not primary also not important
 
                 if(isUnimportant){
@@ -196,7 +197,7 @@ export default class DataTableHelper extends Component {
         return filterParam;
     }
 
-    static async loadResourceFromServer(tableName, offset, limit, multiSortMeta,filterParams){
+    static async loadResourceFromServer(tableName, offset, limit, multiSortMeta,filterParams, selectedColumns){
         let orderParam = "";
         if(!!multiSortMeta && multiSortMeta.length>0){
             orderParam = orderParam+"&order=[";
@@ -215,6 +216,18 @@ export default class DataTableHelper extends Component {
         if(!!limit){
             limitParam = "&limit="+limit;
         }
+        let attributesParam = "";
+        if(!!selectedColumns && selectedColumns.length > 0){
+            attributesParam = "&attributes=[";
+            for(let i=0; i<selectedColumns.length; i++){
+                if(i>0){
+                    attributesParam+=",";
+                }
+                let selectedColumn = selectedColumns[i];
+                attributesParam += '"'+selectedColumn.field+'"';
+            }
+            attributesParam += "]";
+        }
 
         let offsetParam = "";
         if(!!offset){
@@ -223,7 +236,7 @@ export default class DataTableHelper extends Component {
 
         let filterParam = DataTableHelper.getURLFilterParamsAddon(filterParams);
 
-        let url = "models/"+tableName+"?"+limitParam+offsetParam+orderParam+filterParam;
+        let url = "models/"+tableName+"?"+limitParam+offsetParam+attributesParam+orderParam+filterParam;
         let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_GET,url);
         if(RequestHelper.isSuccess(answer)){
             let resourceList = answer.data;

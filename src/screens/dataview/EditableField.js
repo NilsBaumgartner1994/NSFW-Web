@@ -10,6 +10,11 @@ import {SelectButton} from "primereact/selectbutton";
 import MyImageUploader from "../../helper/MyImageUploader";
 
 import {SchemeHelper} from "nsfw-connector";
+import MyFileUploader from "../../helper/MyFileUploader";
+import {stringify} from "csv";
+import App from "../../App";
+import DownloadHelper from "../../helper/DownloadHelper";
+import MyFileHelper from "../../helper/MyFileHelper";
 
 export default class EditableField extends Component {
 
@@ -252,7 +257,7 @@ export default class EditableField extends Component {
     }
 
     renderImageBlobField(attributeKey){
-        let blob =this.state.value;
+        let blob = this.state.value;
         let base64 = this.toBase64(blob.data);
 
         return(
@@ -265,21 +270,121 @@ export default class EditableField extends Component {
         );
     }
 
+    readFileAsync(file) {
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+
+            reader.onload = () => {
+                console.log(reader)
+                resolve(reader.result);
+            };
+
+            reader.onerror = reject;
+
+            reader.readAsBinaryString(file);
+        })
+    }
+
+    async fileToBLOB(file){
+        let result = await this.readFileAsync(file);
+        return result;
+    }
+
+    async handleFileUpload(attributeKey, isTableNameFiles, file){
+        //TODO Decode if file.size is smaller than the server upload limit
+        //TODO implement GET Server file upload limit
+
+        try{
+            let blob = await this.fileToBLOB(file);
+
+            await this.handleSaveEditedRawValue(attributeKey,blob);
+
+            if(isTableNameFiles){
+                await this.handleSaveEditedRawValue("bytes",file.size);
+                let nameWithExtension = file.name;
+                let nameSplits = nameWithExtension.split('.');
+                let extension = "";
+                let name = nameWithExtension;
+                if(nameSplits.length>1){
+                    extension = nameSplits.pop();
+                    name = name.slice(0,name.length-extension.length-1);
+                }
+
+                await this.handleSaveEditedRawValue("name",name);
+                await this.handleSaveEditedRawValue("type",extension);
+            }
+
+            this.props.instance.setState({
+                increasingNumber: this.props.instance.state.increasingNumber+1
+            });
+        } catch (err){
+            App.addToastMessage("Fehler","beim Hochladen der Datei", "error");
+        }
+    }
+
+    handleFileDownload(attributeKey, isTableNameFiles){
+        let arrayAsString = this.state.value;
+        let blob = MyFileHelper.arrayBufferToBlob(arrayAsString);
+
+        let filename = "";
+        if(isTableNameFiles){
+            filename = this.props.instance.name+"."+this.props.instance.type;
+        }
+
+        DownloadHelper.downloadBlobAsFile(blob, filename);
+    }
+
+    renderFileUpload(attributeKey, isTableNameFiles){
+        let blob = this.state.value;
+
+        let disabled = !blob;
+
+        let accept = "/*";
+        //TODO maybe check if isTableNameFiles --> accept = this.props.instance.extension
+
+        return(
+            <div>
+                <div className="p-inputgroup">
+                    <MyFileUploader accept={accept} handleUpload={this.handleFileUpload.bind(this,attributeKey, isTableNameFiles)} tableName={this.props.instance.props.tableName} />
+                    <Button disabled={disabled} onClick={this.handleFileDownload.bind(this, attributeKey, isTableNameFiles)} label={"Download"} icon={"pi pi-download"} iconPos={"right"} />
+                    <Button icon="pi pi-times" className="p-button-danger" onClick={this.handleClearValue.bind(this,attributeKey)} />
+                </div>
+            </div>
+        );
+    }
+
     renderEditableField(){
         let attributeKey = this.props.attributeKey;
         let attributeType = SchemeHelper.getType(this.props.scheme,attributeKey);
+
+        if(this.props.instance.state.tableName==="Images"){
+            if(attributeType==="BLOB"){
+                return this.renderImageBlobField(attributeKey);
+            }
+        }
+        if(this.props.instance.state.tableName==="Files"){
+            if(attributeType==="BLOB"){
+                return this.renderFileUpload(attributeKey, true);
+            } else {
+                if(attributeKey==="bytes"){
+                    return  (
+                        <div className="p-inputgroup">
+                            {this.state.value || ""}
+                        </div>
+                    )
+                }
+            }
+        }
+
         switch(attributeType){
             case "TEXT": return this.renderEditorField(attributeKey);
             case "STRING": return this.renderEditableTextField(attributeKey);
             case "BOOLEAN": return this.renderEditableBooleanField(attributeKey);
             case "INTEGER": return this.renderEditableIntegerField(attributeKey);
+            case "BIGINT": return this.renderEditableIntegerField(attributeKey);
             case "DATE": return this.renderEditableDateField(attributeKey);
             case "JSON": return this.renderEditableJSONField(attributeKey);
-        }
-        if(this.props.instance.state.tableName==="Images"){
-            if(attributeType==="BLOB"){
-                return this.renderImageBlobField(attributeKey);
-            }
+            case "BLOB": return this.renderFileUpload(attributeKey, false);
         }
 
         return <div style={{"background-color": "green"}}>{this.state.value}</div>;

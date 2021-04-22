@@ -125,7 +125,8 @@ export default class DefaultResourceDatatable extends Component {
             let limit = this.state.limit;
             let multiSortMeta = this.state.multiSortMeta;
             let filterParams = this.state.filters;
-            let resources = await DataTableHelper.loadResourceFromServer(this.props.tableName,offset,limit,multiSortMeta,filterParams);
+            let selectedColumns = this.state.selectedColumns;
+            let resources = await DataTableHelper.loadResourceFromServer(this.props.tableName,offset,limit,multiSortMeta,filterParams, selectedColumns);
 
             await this.setState({
                 resources: resources,
@@ -298,10 +299,11 @@ export default class DefaultResourceDatatable extends Component {
         </div>;
     }
 
-    onColumnToggle(event) {
+    async onColumnToggle(event) {
         let selectedColumns = event.value;
         let orderedSelectedColumns = this.state.attributeKeys.filter(col => selectedColumns.some(sCol => sCol.field === col.field));
-        this.setState({selectedColumns: orderedSelectedColumns});
+        await this.setState({selectedColumns: orderedSelectedColumns});
+        await this.loadResourcesFromServer();
     }
 
     getInstanceRoute(rowData, routes=this.state.routes, scheme=this.state.scheme){

@@ -50,6 +50,7 @@ export default class ResourceCreateComponent extends Component {
             route: route,
             routes: routes,
             scheme: scheme,
+            tableName: tableName
         });
     }
 

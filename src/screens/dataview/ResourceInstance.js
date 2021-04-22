@@ -369,13 +369,15 @@ export default class ResourceInstance extends Component {
     renderAssociationCardSingle(associationTableName,associationName){
         let resource = this.state.associationResources[associationName];
         let modelscheme = this.state.associationSchemes[associationTableName];
-        let amountText = "";
 
         let isAssociated = !!resource;
         let associatedResources = [];
         if(isAssociated){
             associatedResources = [resource];
         }
+
+        let amount = isAssociated ? 1 : 0;
+        let amountText = "("+amount+")";
 
         let overlaypanelID = "overlayPanel-"+associationName;
         let overlaypanelIDCreateAndSet = overlaypanelID+"CreateAndSet";
@@ -388,7 +390,7 @@ export default class ResourceInstance extends Component {
 
         return(
             <div className="p-col-12">
-                <Card title={associationName}>
+                <Card title={associationName+" "+amountText}>
                     <OverlayPanel style={{"margin-right":"0.769em"}} showCloseIcon={true} ref={(el) => this[overlaypanelIDCreateAndSet] = el}>
                         <ResourceCreateComponent schemes={this.state.schemes} tableName={associationTableName} onHandleResourceCreated={(resource) => {addCallbackFunction([resource]);}} />
                     </OverlayPanel>

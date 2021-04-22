@@ -11,4 +11,11 @@ export default class DownloadHelper extends Component {
         link.click();
     }
 
+    static downloadBlobAsFile(blob, filenameWithExtension){
+        let link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filenameWithExtension;
+        link.click();
+    }
+
 }
