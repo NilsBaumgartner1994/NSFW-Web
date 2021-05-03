@@ -13,6 +13,20 @@ export default class AppMenu extends Component {
 
     }
 
+    static DEFAULT_MENU_CONTENT = {
+        Tables: true,
+        Associations: true,
+        Server: true,
+    };
+
+    static hideDefaultMenuContent(menuName){
+        delete AppMenu.DEFAULT_MENU_CONTENT[menuName];
+    }
+
+    static hideAllDefaultMenuContent(){
+        AppMenu.DEFAULT_MENU_CONTENT = {};
+    }
+
     static addCustomMenuContent(menuName, icon, index, mapOfNameToRoutes){
         AppMenu.CUSTOM_MENU_CONTENT[index] = {
             menuName: menuName,
@@ -146,13 +160,16 @@ export default class AppMenu extends Component {
         )
     }
 
+    static ICON_APPS = "apps";
+    static ICON_BUTTON = "button";
     static ICON_CHARTS = "charts";
     static ICON_COMPONENTS = "components";
     static ICON_DATA = "data";
+    static ICON_DRAGDROP = "dragdrop";
     static ICON_FILE = "file";
-    static ICON_DRAGDROP = "dragrop";
     static ICON_INPUT = "input";
     static ICON_MESSAGE = "message";
+    static ICON_MENU = "menu";
     static ICON_MISC = "misc";
     static ICON_MULTIMDEIA = "multimedia";
     static ICON_OVERLAY = "overlay";
@@ -202,14 +219,23 @@ export default class AppMenu extends Component {
         }
 
         let index = 0;
+        let sidebarMenus = [];
+        sidebarMenus.push(this.renderCustomMenuContentList(topMenuContent, -topMenuContent.length));
+        if(AppMenu.DEFAULT_MENU_CONTENT["Tables"]){
+            sidebarMenus.push(this.renderSidebarMenu(index++,"Tables",AppMenu.ICON_DATA,this.renderSchemesSingle()))
+        }
+        if(AppMenu.DEFAULT_MENU_CONTENT["Associations"]){
+            sidebarMenus.push(this.renderSidebarMenu(index++,"Tables",AppMenu.ICON_DATA,this.renderSchemesAssociations()))
+        }
+        if(AppMenu.DEFAULT_MENU_CONTENT["Server"]){
+            sidebarMenus.push(this.renderSidebarMenu(index++,"Tables",AppMenu.ICON_DATA,this.renderServerFunctions()))
+        }
+        sidebarMenus.push(this.renderCustomMenuContentList(bottomMenuContent, index));
+
 
         return (
             <div className="layout-menu">
-                {this.renderCustomMenuContentList(topMenuContent, -topMenuContent.length)}
-                {this.renderSidebarMenu(index++,"Tables",AppMenu.ICON_DATA,this.renderSchemesSingle())}
-                {this.renderSidebarMenu(index++,"Associations",AppMenu.ICON_DATA,this.renderSchemesAssociations())}
-                {this.renderSidebarMenu(index++,"Server",AppMenu.ICON_DATA,this.renderServerFunctions())}
-                {this.renderCustomMenuContentList(bottomMenuContent, index)}
+                {sidebarMenus}
             </div>
         );
     }
