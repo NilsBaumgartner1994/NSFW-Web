@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {ProgressSpinner} from 'primereact/progressspinner';
 import {Card} from 'primereact/card';
-import {Growl} from 'primereact/growl';
 import {ProgressBar} from 'primereact/progressbar';
 import {Button} from 'primereact/button';
 import WindowHelper from "../../helper/WindowHelper";
 import EditableField from "./EditableField";
 
 import {RouteHelper, NSFWConnector, APIRequest, RequestHelper, SchemeHelper, NSFWResource} from "nsfw-connector";
+import App from "../../App";
 
 
 export default class ResourceCreateComponent extends Component {
@@ -62,9 +62,9 @@ export default class ResourceCreateComponent extends Component {
             this.setState({
                 requestPending: false,
             });
-            this.growl.show({severity: 'error', summary: 'Error', detail: detail});
+            App.addToastMessage('Error', detail, 'error');
         } else {
-            this.growl.show({severity: 'success', summary: 'Success', detail: 'Changes saved'});
+            App.addToastMessage('Success', 'Changes saved', 'success');
             //TODO Go To Instance Side
             let resource = answer.data;
             let resourceClass = new NSFWResource(this.props.tableName);
@@ -212,8 +212,6 @@ export default class ResourceCreateComponent extends Component {
 
         return (
             <div>
-                <Growl ref={(el) => this.growl = el} />
-
                 {this.renderHeader()}
 
                 <div className="content-section implementation">

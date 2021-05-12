@@ -7,14 +7,20 @@ export default class Customization extends Component {
         super(props);
     }
 
+    static isDefaultContentHidden(tableName){
+        return App.DATAVIEW_CUSTOMIZATIONS_SETTINGS_HIDE_DEFAULT[tableName];
+    }
+
     render(){
         let parentState = this.props.parentState;
         let instance = this.props.instance;
         let tableName = parentState.tableName;
 
-        const CustomComponent = App.DATAVIEW_CUSTOMIZATIONS[tableName];
+        const CustomComponent = App.DATAVIEW_CUSTOMIZATIONS_CONTENT[tableName];
 
-        if (typeof CustomComponent !== "undefined") {
+        console.log("Customization render: ");
+        console.log(CustomComponent);
+        if (CustomComponent!==null && typeof CustomComponent !== "undefined") {
             return React.createElement(CustomComponent, {
                 reloadPage: this.props.reloadPage,
                 instance: instance,

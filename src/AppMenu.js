@@ -144,6 +144,11 @@ export default class AppMenu extends Component {
         )
     }
 
+    /**
+     * Bla Bla Bla
+     * @param mapNameURL das ist ein Test
+     * @returns {JSX.Element}
+     */
     renderSidebarListOfBulletLinks(mapNameURL){
         let links = [];
         let names = Object.keys(mapNameURL);
@@ -225,10 +230,10 @@ export default class AppMenu extends Component {
             sidebarMenus.push(this.renderSidebarMenu(index++,"Tables",AppMenu.ICON_DATA,this.renderSchemesSingle()))
         }
         if(AppMenu.DEFAULT_MENU_CONTENT["Associations"]){
-            sidebarMenus.push(this.renderSidebarMenu(index++,"Tables",AppMenu.ICON_DATA,this.renderSchemesAssociations()))
+            sidebarMenus.push(this.renderSidebarMenu(index++,"Associations",AppMenu.ICON_DATA,this.renderSchemesAssociations()))
         }
         if(AppMenu.DEFAULT_MENU_CONTENT["Server"]){
-            sidebarMenus.push(this.renderSidebarMenu(index++,"Tables",AppMenu.ICON_DATA,this.renderServerFunctions()))
+            sidebarMenus.push(this.renderSidebarMenu(index++,"Server",AppMenu.ICON_DATA,this.renderServerFunctions()))
         }
         sidebarMenus.push(this.renderCustomMenuContentList(bottomMenuContent, index));
 

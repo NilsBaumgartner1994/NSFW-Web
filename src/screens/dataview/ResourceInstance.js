@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {ProgressSpinner} from 'primereact/progressspinner';
 import {Card} from 'primereact/card';
-import {Growl} from 'primereact/growl';
 import {ProgressBar} from 'primereact/progressbar';
 import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
@@ -534,10 +533,18 @@ export default class ResourceInstance extends Component {
             return <HeaderTemplate title={"404 Error"} subtitle={"The resource you are looking for does not exist :-("} />
         }
 
+        let hideDefaultContent = Customization.isDefaultContentHidden(this.state.tableName);
+
+        if(hideDefaultContent){
+            return(
+                <div>
+                    {this.renderCustomization()}
+                </div>
+            )
+        };
+
         return (
             <div>
-                <Growl ref={(el) => this.growl = el} />
-
                 {this.renderHeader()}
 
                 <div className="content-section implementation">

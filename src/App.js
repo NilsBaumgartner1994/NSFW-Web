@@ -35,12 +35,19 @@ export default class App extends Component {
         App.CUSTOM_LOGO = App.renderLogoSrc(src);
     }
 
-    static DATAVIEW_CUSTOMIZATIONS = {
+    static DATAVIEW_CUSTOMIZATIONS_CONTENT = {
 
     }
 
-    static addDataviewCustomization(tableName, component){
-        App.DATAVIEW_CUSTOMIZATIONS[tableName] = component;
+    static DATAVIEW_CUSTOMIZATIONS_SETTINGS_HIDE_DEFAULT = {
+
+    }
+
+    static addDataviewCustomization(tableName, component, hideDefault=false){
+        App.DATAVIEW_CUSTOMIZATIONS_CONTENT[tableName] = component;
+        if(hideDefault){
+            App.DATAVIEW_CUSTOMIZATIONS_SETTINGS_HIDE_DEFAULT[tableName] = true;
+        }
     }
 
     static CUSTOM_ROUTES = {
