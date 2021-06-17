@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import ServerWeb from "./ServerWeb";
 import AppMenu from "./AppMenu";
 import App from "./App";
+import SupportComponent from "./screens/home/SupportComponent";
 
 const regeneratorRuntime = require("regenerator-runtime");
 
@@ -18,6 +19,7 @@ const config = {
 }
 
 App.addDataviewCustomization("Exams", null, true);
+App.setCustomHomeComponent(SupportComponent);
 
 ServerWeb.setConfig(config);
 ServerWeb.start(ReactDOM);

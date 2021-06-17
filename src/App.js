@@ -30,9 +30,14 @@ import ServerRoutes from "./screens/server/ServerRoutes";
 export default class App extends Component {
 
     static CUSTOM_LOGO = null;
+    static CUSTOM_HOME_COMPONENT = HomeComponent;
 
     static setCustomLogoSource(src){
         App.CUSTOM_LOGO = App.renderLogoSrc(src);
+    }
+
+    static setCustomHomeComponent(customComponent){
+        App.CUSTOM_HOME_COMPONENT = customComponent;
     }
 
     static DATAVIEW_CUSTOMIZATIONS_CONTENT = {
@@ -385,7 +390,7 @@ export default class App extends Component {
 
                 <div id="layout-content">
                     <Switch>
-                        <Route exact path="/" component={HomeComponent}/>
+                        <Route exact path="/" component={App.CUSTOM_HOME_COMPONENT}/>
                         <Route exact path="/support" component={SupportComponent}/>
 
                         {this.renderDatabaseRoutes()}
