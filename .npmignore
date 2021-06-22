@@ -6,7 +6,7 @@ src
 .gitignore
 .npmignore
 .nvmrc
-/idea
+.idea/
 gulpfile.js
 yarn.lock
 .github
