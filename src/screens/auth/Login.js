@@ -6,7 +6,7 @@ import StringHelper from "../../helper/StringHelper";
 import {Button} from "primereact/button";
 import {Checkbox} from "primereact/checkbox";
 
-import {APIRequest, AuthConnector, MyStorage, RequestHelper} from "nsfw-connector";
+import {AuthConnector, MyStorage, RequestHelper} from "nsfw-connector";
 import App from "../../App";
 import ServerWeb from "../../ServerWeb";
 

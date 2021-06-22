@@ -1,109 +1,111 @@
-import React, {Component} from 'react';
-import {Link, Switch} from 'react-router-dom';
-import Route from "react-router-dom/Route";
-import {withRouter} from 'react-router';
-import classNames from 'classnames';
+import React, { Component } from 'react';
+import AppMenu from './AppMenu';
+import { classNames } from './components/utils/ClassNames';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
-import 'primereact/resources/primereact.min.css'; //load style for components
-import './resources/style/mainStyle.css'; //load our customizations
+import "primereact/resources/primereact.css";
 
+import './assets/style/flags.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import 'prismjs/themes/prism-coy.css';
-import npmPackage from "./../package.json";
+import './assets/style/app/App.scss';
 
-import {Growl} from "primereact/growl";
-import DialogHelper from "./helper/DialogHelper";
-import HomeComponent from './screens/home/HomeComponent';
-import SupportComponent from './screens/home/SupportComponent';
+import AppRouter from './AppRouter';
+import AppTopbar from './AppTopbar';
+import AppFooter from './AppFooter';
+import AppConfig from './AppConfig';
+
+import AppContentContext from './AppContentContext';
+import { Toast } from 'primereact/toast';
+import PrimeReact from 'primereact/api';
+import { AppChangelogDialog } from './AppChangelogDialog';
+import {RouteHelper, NSFWConnector, AuthConnector, MyStorage} from "nsfw-connector";
 import Login from "./screens/auth/Login";
 
-import ResourceIndex from "./screens/dataview/ResourceIndex";
-import ResourceInstance from "./screens/dataview/ResourceInstance";
-import ResourceCreate from "./screens/dataview/ResourceCreate";
 
-import {RouteHelper, NSFWConnector, AuthConnector, MyStorage} from "nsfw-connector";
-import AppMenu from "./AppMenu";
-import ServerWeb from "./ServerWeb";
-import ServerRoutes from "./screens/server/ServerRoutes";
-
-export default class App extends Component {
-
-    static CUSTOM_LOGO = null;
-    static CUSTOM_HOME_COMPONENT = HomeComponent;
-
-    static setCustomLogoSource(src){
-        App.CUSTOM_LOGO = App.renderLogoSrc(src);
-    }
-
-    static setCustomHomeComponent(customComponent){
-        App.CUSTOM_HOME_COMPONENT = customComponent;
-    }
-
-    static DATAVIEW_CUSTOMIZATIONS_CONTENT = {
-
-    }
-
-    static DATAVIEW_CUSTOMIZATIONS_SETTINGS_HIDE_DEFAULT = {
-
-    }
-
-    static addDataviewCustomization(tableName, component, hideDefault=false){
-        App.DATAVIEW_CUSTOMIZATIONS_CONTENT[tableName] = component;
-        if(hideDefault){
-            App.DATAVIEW_CUSTOMIZATIONS_SETTINGS_HIDE_DEFAULT[tableName] = true;
-        }
-    }
-
-    static CUSTOM_ROUTES = {
-
-    }
-
-    static registerCustomRoute(route, component){
-        App.CUSTOM_ROUTES[route] = component;
-    }
-
+export class App extends Component {
 
     static AppInstance = null;
 
-    static dialog = null;
-    static growl = null;
+    constructor(props) {
+        super(props);
+        App.AppInstance = this;
 
-    static addToastMessage(summary, detail, severity="success",cloasable, sticky, life){
-        if(App.growl && App.growl.show){
-            App.growl.show({severity:severity, summary: summary, detail: detail, cloasable: cloasable, sticky: sticky, life: life});
+        this.news_key = 'primenews-react';
+        this.theme_key = 'primetheme-react';
+
+        this.state = {
+            theme: 'saga-blue',
+            inputStyle: 'outlined',
+            ripple: false,
+            darkTheme: false,
+            themeCategory: null,
+            schemes: {},
+            menuMode: null,
+            sidebarActive: false,
+            configuratorActive: false,
+            changelogActive: false,
+            searchVal: null,
+            isRippleConfigDisabled: false,
+            versions: [],
+            loading: true,
+            loggedIn: false,
+        };
+
+        this.onThemeChange = this.onThemeChange.bind(this);
+        this.onMenuButtonClick = this.onMenuButtonClick.bind(this);
+        this.onMenuItemClick = this.onMenuItemClick.bind(this);
+        this.onMaskClick = this.onMaskClick.bind(this);
+        this.onInputStyleChange = this.onInputStyleChange.bind(this);
+        this.onRippleChange = this.onRippleChange.bind(this);
+
+        this.showChangelogDialog = this.showChangelogDialog.bind(this);
+        this.hideChangelogDialog = this.hideChangelogDialog.bind(this);
+
+        PrimeReact.ripple = false;
+    }
+
+    async initTheme(){
+        const href = window.location.href;
+        const queryParams = href.split('?');
+        let theme = this.state.theme;
+
+        if (queryParams && queryParams[1]) {
+            const searchParams = new URLSearchParams(queryParams[1]);
+            theme = searchParams.get('theme');
+
+            const menuMode = searchParams.get('menu');
+            if (menuMode) {
+                await this.setState({ menuMode });
+            }
+        }
+        else {
+            theme = localStorage.getItem(this.theme_key);
+        }
+
+        if (theme) {
+            const dark = this.isDarkTheme(theme);
+            await this.onThemeChange({
+                theme,
+                dark
+            });
         }
     }
 
-    constructor(props) {
-        super(props);
-        console.log("App constructor");
-        this.state = {
-            mobileMenuActive: false,
-            themeMenuActive: false,
-            themeMenuVisited: false,
-            loading: true,
-        };
-        App.AppInstance = this;
+    async init() {
+        await this.initTheme();
+        await this.loadInformations();
+    }
 
-        this.theme = 'luna-amber';
-        this.changeTheme = this.changeTheme.bind(this);
-        this.onMenuButtonClick = this.onMenuButtonClick.bind(this);
-        this.onMenuButtonKeyDown = this.onMenuButtonKeyDown.bind(this);
-        this.onSidebarClick = this.onSidebarClick.bind(this);
-        this.onThemesLinkClick = this.onThemesLinkClick.bind(this);
-        this.onThemesLinkKeyDown = this.onThemesLinkKeyDown.bind(this);
-        this.onThemeChangerKeyDown = this.onThemeChangerKeyDown.bind(this);
-        this.onThemesMenuRouteChange = this.onThemesMenuRouteChange.bind(this);
-
-        console.log("Start load Informations");
-        this.loadInformations();
+    async handleLogout() {
+        await this.setLoggedInState(false);
     }
 
     async loadInformations(){
         NSFWConnector.reset();
-        let instance = this;
-        NSFWConnector.Callback_Logout = () => {instance.setLoggedInState(false)};
+        NSFWConnector.Callback_Logout = this.handleLogout.bind(this);
         let loggedIn = await AuthConnector.isLoggedInUser();
         let schemes = await NSFWConnector.getSchemes() || {};
         let tableNames = Object.keys(schemes);
@@ -114,7 +116,7 @@ export default class App extends Component {
             displayName = currentUser.displayName;
         }
 
-        this.setState({
+        await this.setState({
             tableNames: tableNames,
             displayName: displayName,
             schemes: schemes,
@@ -133,217 +135,129 @@ export default class App extends Component {
         }
     }
 
-    renderCustomRoutes(){
-        let routes = Object.keys(App.CUSTOM_ROUTES);
-
-        let output = [];
-
-        for(let i=0; i<routes.length; i++){
-            let route = routes[i];
-            const CustomComponent = App.CUSTOM_ROUTES[route];
-            console.log("Render Custom Routes");
-            console.log(CustomComponent);
-            output.push(
-                <Route exact path={route} component={withRouter(CustomComponent)} />
-            )
-        }
-
-        return output;
-    }
-
-    renderServerRoutes(){
-        let output = [];
-        output = output.concat(ServerRoutes.configureRoutes("/server"))
-        return output;
-    }
-
-    renderInstanceRoute(path, tableName){
-        return <Route exact path={path} component={withRouter(ResourceInstance.bind(this,this.state.schemes,tableName))} />;
-    }
-
-    renderInstanceCreateRoute(path, tableName){
-        return <Route exact path={path} component={withRouter(ResourceCreate.bind(this,this.state.schemes,tableName))} />;
-    }
-
-    renderIndexRoutes(){
-        return <Route exact path={"/models/:tableName"} component={withRouter(ResourceIndex.bind(this,this.state.schemes))}/>;
-    }
-
-    renderDatabaseRoutes(){
-        if(!!this.state.schemes && !!this.state.tableNames){
-            let output = [];
-            console.log("renderDatabaseRoutes: ");
-            console.log(this.state.schemes);
-            output.push(this.renderIndexRoutes());
-
-            for(let i=0; i<this.state.tableNames.length; i++){
-                let tableName = this.state.tableNames[i];
-                let getRoute = RouteHelper.getInstanceRoute(this.state.schemes, tableName);
-                let createRoute = RouteHelper.getCreateRouteForResource(this.state.schemes, tableName);
-
-                output.push(this.renderInstanceRoute(getRoute,tableName));
-                output.push(this.renderInstanceCreateRoute(createRoute,tableName));
-            }
-
-            return output;
-        } else {
-            return (<div></div>)
-        }
-    }
-
-    changeTheme(event, theme, dark) {
+    onThemeChange(event) {
+        let { theme, dark: darkTheme} = event;
         let themeElement = document.getElementById('theme-link');
-        themeElement.setAttribute('href', themeElement.getAttribute('href').replace(this.theme, theme));
-        this.theme = theme;
+        let themeCategory = /^(md-|mdc-)/i.test(theme) ? 'material' : (/^(bootstrap)/i.test(theme) ? 'bootstrap' : null);
+        let state = {};
 
-        if (dark) {
-            if (!this.darkDemoStyle) {
-                this.darkDemoStyle = document.createElement('style');
-                this.darkDemoStyle.type = 'text/css';
-                this.darkDemoStyle.innerHTML = '.implementation { background-color: #3f3f3f !important; color: #dedede !important} .implementation > h3, .implementation > h4{ color: #dedede !important}';
-                document.body.appendChild(this.darkDemoStyle);
-            }
-        } else if (this.darkDemoStyle) {
-            document.body.removeChild(this.darkDemoStyle);
-            this.darkDemoStyle = null;
+        if (theme.startsWith('md')) {
+            PrimeReact.ripple = true;
+            state = { ripple: true };
         }
 
-        this.setState({
-            themeMenuActive: false
-        });
-        this.unbindThemesMenuDocumentClickListener();
-        event.preventDefault();
-    }
+        themeElement.setAttribute('href', themeElement.getAttribute('href').replace(this.state.theme, event.theme));
 
-    toggleMenu() {
-        this.setState({
-            mobileMenuActive: !this.state.mobileMenuActive
-        }, () => {
-            if (this.state.mobileMenuActive)
-                this.bindMenuDocumentClickListener();
-            else
-                this.unbindMenuDocumentClickListener();
+        state = {...state, ...{
+                theme,
+                darkTheme,
+                themeCategory
+            }
+        };
+
+        this.setState(state, () => {
+            localStorage.setItem(this.theme_key, this.state.theme);
         });
     }
 
     onMenuButtonClick() {
-        this.toggleMenu();
-    }
+        this.menuClick = true;
 
-    onMenuButtonKeyDown(event) {
-        if (event.key === 'Enter') {
-            this.toggleMenu();
+        if (this.sidebarActive) {
+            this.setState({ sidebarActive: false });
+            this.removeClass(document.body, 'blocked-scroll');
+        }
+        else {
+            this.setState({ sidebarActive: true });
+            this.addClass(document.body, 'blocked-scroll');
         }
     }
 
-    onSidebarClick(event) {
-        if (event.target.nodeName === 'A') {
-            this.setState({mobileMenuActive: false});
-        }
+    onMenuItemClick() {
+        this.setState({ sidebarActive: false });
+        this.removeClass(document.body, 'blocked-scroll');
     }
 
-    onThemesLinkClick() {
+    onMaskClick() {
+        this.setState({ sidebarActive: false });
+        this.removeClass(document.body, 'blocked-scroll');
+    }
+
+    isDarkTheme(theme) {
+        return /(dark|vela|arya|luna)/i.test(theme);
+    }
+
+    onInputStyleChange(inputStyle) {
+        this.setState({ inputStyle });
+    }
+
+    onRippleChange(value, isRippleConfigDisabled) {
+        PrimeReact.ripple = value;
+
+        this.setState({ ripple: value, isRippleConfigDisabled });
+    }
+
+    showChangelogDialog(searchVal) {
         this.setState({
-            themeMenuActive: !this.state.themeMenuActive,
-            themeMenuVisited: true
-        }, () => {
-            if (this.state.themeMenuActive)
-                this.bindThemesMenuDocumentClickListener();
-            else
-                this.unbindThemesMenuDocumentClickListener();
+            changelogActive: true,
+            searchVal
         });
     }
 
-    onThemesLinkKeyDown(event) {
-        if (event.key === 'Enter') {
-            this.onThemesLinkClick();
+    hideChangelogDialog() {
+        this.setState({ changelogActive: false });
+    }
+
+    addClass(element, className) {
+        if (element.classList)
+            element.classList.add(className);
+        else
+            element.className += ' ' + className;
+    }
+
+    removeClass(element, className) {
+        if (element.classList)
+            element.classList.remove(className);
+        else
+            element.className = element.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+    }
+
+    hasClass(element, className) {
+        if (element.classList)
+            return element.classList.contains(className);
+        else
+            return new RegExp('(^| )' + className + '( |$)', 'gi').test(element.className);
+    }
+
+    isOutdatedIE() {
+        let ua = window.navigator.userAgent;
+        if (ua.indexOf('MSIE ') > 0 || ua.indexOf('Trident/') > 0) {
+            return true;
         }
+
+        return false;
     }
 
-    onThemeChangerKeyDown(event) {
-        if (event.key === 'Enter') {
-            event.target.click();
+    componentDidMount() {
+        if (this.isOutdatedIE()) {
+            this.showcaseToast.show({ severity: 'warn', summary: 'Limited Functionality', detail: 'Although PrimeReact supports IE11, ThemeSwitcher in this application cannot be not fully supported by your browser. Please use a modern browser for the best experience of the showcase.', life: 6000 });
         }
-    }
 
-    onThemesMenuRouteChange() {
-        this.setState({themeMenuActive: false}, () => {
-            this.unbindThemesMenuDocumentClickListener();
-        });
-    }
-
-    bindMenuDocumentClickListener() {
-        if (!this.menuDocumentClickListener) {
-            this.menuDocumentClickListener = (event) => {
-                if (!this.isMenuButtonClicked(event) && !this.sidebar.contains(event.target)) {
-                    this.setState({mobileMenuActive: false});
-                    this.unbindMenuDocumentClickListener();
-                }
-            };
-
-            document.addEventListener('click', this.menuDocumentClickListener);
-        }
-    }
-
-    unbindMenuDocumentClickListener() {
-        if (this.menuDocumentClickListener) {
-            document.removeEventListener('click', this.menuDocumentClickListener);
-            this.menuDocumentClickListener = null;
-        }
-    }
-
-    isMenuButtonClicked(event) {
-        return event.target === this.menuButton || this.menuButton.contains(event.target);
-    }
-
-    bindThemesMenuDocumentClickListener() {
-        if (!this.themesMenuDocumentClickListener) {
-            this.themesMenuDocumentClickListener = (event) => {
-                if (this.themeMenu && event.target !== this.themeMenuLink && !this.themeMenu.contains(event.target)) {
-                    this.setState({themeMenuActive: null});
-                    this.unbindThemesMenuDocumentClickListener();
-                }
-            };
-
-            document.addEventListener('click', this.themesMenuDocumentClickListener);
-        }
-    }
-
-    unbindThemesMenuDocumentClickListener() {
-        if (this.themesMenuDocumentClickListener) {
-            document.removeEventListener('click', this.themesMenuDocumentClickListener);
-            this.themesMenuDocumentClickListener = null;
-        }
-    }
-
-    componentWillUnmount() {
-        this.unbindThemesMenuDocumentClickListener();
-        this.unbindMenuDocumentClickListener();
-    }
-
-    static renderLogoSrc(src){
-        return <img alt="data" src={src} style={{width: "auto" ,height: 55}}/>;
-    }
-
-    renderLogo(){
-        if(!!App.CUSTOM_LOGO){
-            return App.CUSTOM_LOGO;
-        } else {
-            return App.renderLogoSrc("/showcase/resources/images/Banner.png");
-        }
-    }
-
-    renderPackageVersion(){
-        let version = npmPackage.version;
-        let splits = version.split(".");
-        let patch = splits[2];
-        if(!isNaN(patch)){
-            patch = parseInt(patch)+1; //since before uploading the package the version is old cached
-        }
-        return "v"+splits[0]+"."+splits[1]+"."+patch;
+        this.init();
     }
 
     render() {
+        const wrapperClassName = classNames('layout-wrapper', {
+            'layout-overlay': this.state.menuMode && this.state.menuMode === 'overlay',
+            'p-input-filled': this.state.inputStyle === 'filled',
+            'p-ripple-disabled': this.state.ripple === false,
+            [`theme-${this.state.themeCategory}`]: !!this.state.themeCategory,
+        });
+        const maskClassName = classNames('layout-mask', {
+            'layout-mask-active': this.state.sidebarActive
+        });
+
+        console.log("logged in: ", this.state.loggedIn);
         console.log("Render App")
         if(this.state.loading){
             console.log("App still loading");
@@ -351,59 +265,42 @@ export default class App extends Component {
         }
         if(!this.state.loggedIn){
             console.log("Show login state");
-            return <Login/>
+            return <Login/>;
         }
         console.log("Show logged in App");
 
         return (
-            <div className="layout-wrapper">
-                <Growl ref={(el) => App.growl = el} />
-                <DialogHelper ref={(el) => App.dialog = el} />
-                <div className="layout-topbar">
-                    <span ref={el => this.menuButton = el} className="menu-button" tabIndex="0"
-                          onClick={this.onMenuButtonClick} onKeyDown={this.onMenuButtonKeyDown}>
-                        <i className="pi pi-bars"/>
-                    </span>
-                    <Link to="/" className="logo" style={{"margin-left":"0px"}}>
-                        {this.renderLogo()}
-                    </Link>
+            <div className={wrapperClassName}>
+                <Toast ref={(el) => this.showcaseToast = el} />
 
-                    <ul className="topbar-menu p-unselectable-text">
-                        <li>
-                            <div>{this.state.displayName}</div>
-                        </li>
-                        <li>
-                            <Link to="/support">SUPPORT</Link>
-                        </li>
-                        <li>
-                            <Link to="/" onClick={AuthConnector.logout}><i className={"pi pi-sign-out"}/>{" LOGOUT"}</Link>
-                        </li>
-                    </ul>
-                </div>
+                <AppTopbar onMenuButtonClick={this.onMenuButtonClick} onThemeChange={this.onThemeChange} theme={this.state.theme} darkTheme={this.state.darkTheme} versions={this.state.versions} />
 
-                <div id="layout-sidebar" ref={el => this.sidebar = el}
-                     className={classNames({'active': this.state.mobileMenuActive})} onClick={this.onSidebarClick}>
-                    <AppMenu loggedIn={this.state.loggedIn}/>
-                </div>
+                <AppMenu active={this.state.sidebarActive} onMenuItemClick={this.onMenuItemClick} schemes={this.state.schemes} />
 
-                <div className={classNames({'layout-mask': this.state.mobileMenuActive})}/>
+                <AppContentContext.Provider value={{
+                    ripple: this.state.ripple,
+                    inputStyle: this.state.inputStyle,
+                    darkTheme: this.state.darkTheme,
+                    changelogText: "VIEW CHANGELOG",
+                    onChangelogBtnClick: this.showChangelogDialog,
+                    onInputStyleChange: this.onInputStyleChange,
+                    onRippleChange: this.onRippleChange
+                }}>
+                    <div className="layout-content">
+                        <AppRouter schemes={this.state.schemes}/>
 
-                <div id="layout-content">
-                    <Switch>
-                        <Route exact path="/" component={App.CUSTOM_HOME_COMPONENT}/>
-                        <Route exact path="/support" component={SupportComponent}/>
+                        <AppChangelogDialog visible={this.state.changelogActive} searchVal={this.state.searchVal} onHide={this.hideChangelogDialog} />
 
-                        {this.renderDatabaseRoutes()}
-                        {this.renderCustomRoutes()}
-                        {this.renderServerRoutes()}
-                    </Switch>
-                    <div className="content-section layout-footer clearfix">
-                        <span>{ServerWeb.CONFIG.title} {ServerWeb.CONFIG.version}</span><br></br>
-                        <span>powered by <a href={npmPackage.homepage}>{npmPackage.name}</a> {this.renderPackageVersion()}</span>
+                        <AppFooter />
                     </div>
-                </div>
 
+                    <AppConfig theme={this.state.theme} ripple={this.state.ripple} isRippleConfigDisabled={this.state.isRippleConfigDisabled} onThemeChange={this.onThemeChange} onRippleChange={this.onRippleChange} />
+                </AppContentContext.Provider>
+
+                <div className={maskClassName} onClick={this.onMaskClick}></div>
             </div>
         );
     }
 }
+
+export default App;

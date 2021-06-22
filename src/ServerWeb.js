@@ -1,9 +1,10 @@
 import "regenerator-runtime/runtime.js";
+import 'react-app-polyfill/ie9';
 import React, {Component} from 'react';
-import App from './App';
+import {App} from './App';
 import ScrollToTop from './showcase/scrolltotop/ScrollToTop';
-import { BrowserRouter as Router } from 'react-router-dom';
-import ReactComponentToHTMLImageRenderer from "./helper/ReactComponentToHTMLImageRenderer";
+import { HashRouter } from 'react-router-dom';
+
 import {MyStorage} from "nsfw-connector";
 
 export default class ServerWeb extends Component{
@@ -29,6 +30,31 @@ export default class ServerWeb extends Component{
         document.title = ServerWeb.CONFIG.title || "";
     }
 
+    static setCustomLogoSource(src){
+
+    }
+
+    static setCustomHomeComponent(customComponent){
+
+    }
+
+    static registerCustomRoute(route, component){
+        App.CUSTOM_ROUTES[route] = component;
+    }
+
+    static addToastMessage(summary, detail, severity="success",cloasable, sticky, life){
+        if(App.growl && App.growl.show){
+            App.growl.show({severity:severity, summary: summary, detail: detail, cloasable: cloasable, sticky: sticky, life: life});
+        }
+    }
+
+    static addDataviewCustomization(tableName, component, hideDefault=false){
+        App.DATAVIEW_CUSTOMIZATIONS_CONTENT[tableName] = component;
+        if(hideDefault){
+            App.DATAVIEW_CUSTOMIZATIONS_SETTINGS_HIDE_DEFAULT[tableName] = true;
+        }
+    }
+
     static start(ReactDOM){
         let port = window.location.port;
         if(!!port && port===""+3000){
@@ -45,12 +71,14 @@ export default class ServerWeb extends Component{
     render(){
         return(
             <div>
-                <Router>
+                <HashRouter>
                     <ScrollToTop>
-                        <App></App>
+                        <React.StrictMode>
+                            <App></App>
+                        </React.StrictMode>
                     </ScrollToTop>
-                </Router>
-                {ReactComponentToHTMLImageRenderer.getHiddenContainer()}
+                </HashRouter>
+                {/** ReactComponentToHTMLImageRenderer.getHiddenContainer() */}
             </div>
         )
     }

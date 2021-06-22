@@ -5,7 +5,7 @@ import WindowHelper from "../../helper/WindowHelper";
 import {Dialog} from "primereact/dialog";
 import App from "../../App";
 
-import {RouteHelper, NSFWConnector, APIRequest, RequestHelper, NSFWResource} from "nsfw-connector";
+import {RouteHelper, NSFWConnector, APIRequest, RequestHelper} from "nsfw-connector";
 
 export default class ResourceIndex extends Component {
 

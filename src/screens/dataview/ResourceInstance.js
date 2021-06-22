@@ -11,7 +11,7 @@ import App from "../../App";
 import MyImageUploader from "../../helper/MyImageUploader";
 import ResourceCreateComponent from "./ResourceCreateComponent";
 import EditableField from "./EditableField";
-import Customization from "../dataviewCustomization/Customization";
+import DataviewCustomization from "../dataviewCustomization/DataviewCustomization";
 
 import {
     APIRequest,
@@ -520,7 +520,7 @@ export default class ResourceInstance extends Component {
     }
 
     renderCustomization(){
-        return <Customization reloadPage={this.reloadPage.bind(this)} instance={this} parentState={this.state} parentProps={this.props} />;
+        return <DataviewCustomization reloadPage={this.reloadPage.bind(this)} instance={this} parentState={this.state} parentProps={this.props} />;
     }
 
     render() {
@@ -533,7 +533,7 @@ export default class ResourceInstance extends Component {
             return <HeaderTemplate title={"404 Error"} subtitle={"The resource you are looking for does not exist :-("} />
         }
 
-        let hideDefaultContent = Customization.isDefaultContentHidden(this.state.tableName);
+        let hideDefaultContent = DataviewCustomization.isDefaultContentHidden(this.state.tableName);
 
         if(hideDefaultContent){
             return(

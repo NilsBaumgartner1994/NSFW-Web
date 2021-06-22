@@ -1,11 +1,18 @@
-.npmignore
-
-# Logs
-*.log
-npm-debug.log
-
-# Dependency directory
+.sass-cache
 node_modules
-
-# Runtime data
-tmp
+/dist
+public
+src
+.gitignore
+.npmignore
+.nvmrc
+/idea
+gulpfile.js
+yarn.lock
+.github
+exports
+vscode
+.vscode
+.editorconfig
+package-lock.json
+npm-shrinkwrap.json

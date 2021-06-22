@@ -1,0 +1,25 @@
+{
+    "name": "nsfw-web",
+    "version": "1.0.118",
+    "homepage": "https://www.primefaces.org/primereact",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/NilsBaumgartner1994/NSFW-Web.git"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/primefaces/primereact/issues"
+    },
+    "keywords": [
+        "primereact",
+        "react",
+        "ui framework",
+        "component framework",
+        "ui library",
+        "component library",
+        "material",
+        "bootstrap",
+        "react components",
+        "responsive components"
+    ]
+}

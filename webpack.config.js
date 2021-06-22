@@ -7,6 +7,7 @@ module.exports = {
     //externals: [
     //    nodeExternals({modulesFromFile: true,})
     //],
+    mode: 'development',
     entry: ['./src/modules.js'],
     node: {
         fs: 'empty',
@@ -33,6 +34,20 @@ module.exports = {
                 options: {
                     limit: Infinity // everything
                 }
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    },
+                    {
+                        loader: 'css-loader'
+                    },
+                    {
+                        loader: 'sass-loader'
+                    }
+                ]
             },
             {
                 test: /\.css$/i,

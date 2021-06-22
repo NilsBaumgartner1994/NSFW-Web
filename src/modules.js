@@ -1,3 +1,4 @@
+
 // this should be the entry point to your library
 module.exports = {
     ServerWeb: require('./ServerWeb').default, // eslint-disable-line global-require
@@ -21,4 +22,4 @@ module.exports = {
     AssociationIndexOverlay: require('./screens/dataview/AssociationIndexOverlay').default, // eslint-disable-line global-require
     DefaultResourceDatatable: require('./screens/dataview/DefaultResourceDatatable').default, // eslint-disable-line global-require
     ResourceCreateComponent: require('./screens/dataview/ResourceCreateComponent').default, // eslint-disable-line global-require
-};
+}

@@ -1,246 +1,301 @@
-import React, {Component} from 'react';
-import classNames from 'classnames';
-import {Link} from 'react-router-dom';
-import {CSSTransition} from 'react-transition-group';
-import StringHelper from "./helper/StringHelper";
-
-import {NSFWConnector} from "nsfw-connector";
-import App from "./App";
+import React, { Component } from 'react';
+import { CSSTransition } from 'react-transition-group';
+import { NavLink } from 'react-router-dom';
+import axios from 'axios';
+import { classNames } from './components/utils/ClassNames';
+import { InputText } from 'primereact/inputtext';
+import NSFWDatabaseMenu from "./nsfwDatabaseMenu/NSFWDatabaseMenu";
+import HomeComponent from "./screens/home/HomeComponent";
+import SupportComponent from "./screens/home/SupportComponent";
 
 export default class AppMenu extends Component {
 
-    static CUSTOM_MENU_CONTENT = {
+    static CUSTOM_HOME_COMPONENT = HomeComponent;
+    static CUSTOM_SUPPORT_COMPONENT = SupportComponent;
 
-    }
-
-    static DEFAULT_MENU_CONTENT = {
-        Tables: true,
-        Associations: true,
-        Server: true,
-    };
-
-    static hideDefaultMenuContent(menuName){
-        delete AppMenu.DEFAULT_MENU_CONTENT[menuName];
-    }
+    static HIDE_MENU_CONTENT = {};
+    static CUSTOM_MENUS = [];
+    static HIDDEN_ROUTES = {};
 
     static hideAllDefaultMenuContent(){
-        AppMenu.DEFAULT_MENU_CONTENT = {};
+        console.log("AppMenu: hideAllDefaultMenuContent");
+        AppMenu.HIDE_MENU_CONTENT[NSFWDatabaseMenu.MENU_ALL] = true;
     }
 
-    static addCustomMenuContent(menuName, icon, index, mapOfNameToRoutes){
-        AppMenu.CUSTOM_MENU_CONTENT[index] = {
-            menuName: menuName,
-            icon: icon,
-            mapOfNameToRoutes: mapOfNameToRoutes
-        };
+    static addMenuWithRoutes(menuItem) {
+        AppMenu.CUSTOM_MENUS.push(menuItem);
     }
 
-    static defaultDivStyle = {"textAlign":"left","wordBreak": "break-word"};
+    static addRouteWithoutMenu(route, component) {
+        AppMenu.HIDDEN_ROUTES[route] = component;
+    }
 
     constructor(props) {
         super(props);
         this.state = {
-            activeMenu: undefined,
-            loading: true,
-            advanced: false,
+            menu: null,
+            filteredMenu: [],
+            activeSubmenus: {}
         };
-        this.loadInformations();
+
+        this.onSearchInputChange = this.onSearchInputChange.bind(this);
+        this.resetFilter = this.resetFilter.bind(this);
     }
 
-    toggleMenu(val) {
-        let active = this.state.activeMenu === val;
+    async getMenu() {
+        let oldMenuRes = await axios.get('showcase/menu/menu.json', { headers: { 'Cache-Control': 'no-cache' } });
+        let oldMenuData = oldMenuRes.data.data;
+        let data = oldMenuData;
 
-        this.setState({activeMenu: active ? undefined : val});
+        //                    "badge": "new"
+
+        console.log(data);
+
+        let menu = [];
+        let customMenus = AppMenu.CUSTOM_MENUS;
+        for(let customMenuItem of customMenus){
+            menu.push(customMenuItem.toMenuObject());
+        }
+
+        let nsfwMenu = await NSFWDatabaseMenu.getMenu();
+        menu.push(nsfwMenu);
+        //menu = menu.concat(data);
+
+        this.setState({ menu: menu, filteredMenu: menu })
     }
 
-    async loadInformations(){
-        let schemes = await NSFWConnector.getSchemes();
-        this.setState({
-            tableNames: this.getTableNamesSingle(schemes),
-            associationTables: this.getTableNamesAssociations(schemes),
-            loading: false,
-        })
-    }
-
-    filterAdvancedSchemes(schemes){
-
-        return schemes;
-    }
-
-    getTableNamesSingle(schemes){
-        let tableNames = [];
-        if(schemes){
-            let allTableNames = Object.keys(schemes);
-            for(let i=0; i<allTableNames.length; i++){
-                let tableName = allTableNames[i];
-                let getRouteScheme = schemes[tableName]["GET"];
-                let amountOfParams = StringHelper.occurrences(getRouteScheme,":");
-                if(amountOfParams<=1){
-                    tableNames.push(tableName);
+    onSearchInputChange(event) {
+        if (!this.state.menu) {
+            this.setState({ filteredMenu: [] });
+        }
+        else if (!event.target.value) {
+            this.setState({ filteredMenu: this.state.menu });
+        }
+        else if (this.state.menu) {
+            const searchVal = event.target.value && event.target.value.toLowerCase();
+            let filteredMenu = [];
+            for (let item of this.state.menu) {
+                let copyItem = { ...item };
+                if (this.isFilterMatched(copyItem, searchVal) || this.findFilteredItems(copyItem, searchVal)) {
+                    filteredMenu.push(copyItem);
                 }
             }
+
+            this.setState({ filteredMenu });
         }
-        return tableNames;
     }
 
-    getTableNamesAssociations(schemes){
-        let singleTableNames = this.getTableNamesSingle(schemes);
-        let schemeCopy = JSON.parse(JSON.stringify(schemes));
-        for(let i=0; i<singleTableNames.length; i++){
-            let tableName = singleTableNames[i];
-            delete schemeCopy[tableName];
-        }
-        let associationTableNames = Object.keys(schemeCopy) || [];
-        return associationTableNames;
-    }
-
-    renderBulletLink(name,url){
-        return(
-            <Link style={AppMenu.defaultDivStyle} to={url}>&#9679;&nbsp;{name}</Link>
-        )
-    }
-
-    renderSchemesSingle(){
-        return this.renderSchemes(this.state.tableNames);
-    }
-
-    renderSchemesAssociations(){
-        return this.renderSchemes(this.state.associationTables);
-    }
-
-    renderSchemes(tableNames = []){
-        let linkList = [];
-        for(let i=0; i<tableNames.length; i++){
-            let tableName = tableNames[i];
-            linkList.push(this.renderBulletLink(tableName,'/models/'+tableName));
-        }
-
-        return <div>{linkList}</div>;
-    }
-
-    renderServerFunctions(){
-        let linkList = [];
-        linkList.push(this.renderBulletLink("Backups",'/server/backups'));
-        return <div>{linkList}</div>;
-    }
-
-    renderSidebarMenu(index, title, iconName, content){
-        return (
-                [<button key={"renderSidebarMenu-"+index} id="data_menutitle" onClick={() => this.toggleMenu(index)}
-                         className={classNames({'active-menuitem': this.state.activeMenu === index})}>
-                    <img alt="data" className="layout-menu-icon-inactive"
-                         src={"/showcase/resources/images/mono/"+iconName+".svg"}/>
-                    <img alt="data" className="layout-menu-icon-active"
-                         src={"/showcase/resources/images/mono/"+iconName+"-active.svg"}/>
-                    <span>{title}</span>
-                </button>,
-                    <CSSTransition classNames="layout-submenu" timeout={{enter: 400, exit: 400}}
-                                   in={this.state.activeMenu === index}>
-                        <div className="layout-submenu">
-                            {content}
-                        </div>
-                    </CSSTransition>
-                ]
-        )
-    }
-
-    /**
-     * Bla Bla Bla
-     * @param mapNameURL das ist ein Test
-     * @returns {JSX.Element}
-     */
-    renderSidebarListOfBulletLinks(mapNameURL){
-        let links = [];
-        let names = Object.keys(mapNameURL);
-        for(let i=0; i<names.length; i++){
-            let name = names[i];
-            let url = mapNameURL[name];
-            links.push(this.renderBulletLink(name,url));
-        }
-
-        return(
-            <div>
-                {links}
-            </div>
-        )
-    }
-
-    static ICON_APPS = "apps";
-    static ICON_BUTTON = "button";
-    static ICON_CHARTS = "charts";
-    static ICON_COMPONENTS = "components";
-    static ICON_DATA = "data";
-    static ICON_DRAGDROP = "dragdrop";
-    static ICON_FILE = "file";
-    static ICON_INPUT = "input";
-    static ICON_MESSAGE = "message";
-    static ICON_MENU = "menu";
-    static ICON_MISC = "misc";
-    static ICON_MULTIMDEIA = "multimedia";
-    static ICON_OVERLAY = "overlay";
-    static ICON_PANEL = "panel";
-
-    getSortedCustomMenuKeys(){
-        let customMenuContents = AppMenu.CUSTOM_MENU_CONTENT;
-        let keys = Object.keys(customMenuContents);
-        keys.sort(function(a, b){
-            if(isNaN(a)){
-                return 1;
+    findFilteredItems(item, searchVal) {
+        if (item) {
+            let matched = false;
+            if (item.children) {
+                let childItems = [...item.children];
+                item.children = [];
+                for (let childItem of childItems) {
+                    let copyChildItem = { ...childItem };
+                    if (this.isFilterMatched(copyChildItem, searchVal)) {
+                        matched = true;
+                        item.children.push(copyChildItem);
+                        item.expanded = true;
+                    }
+                }
             }
-            if(isNaN(b)){
-                return -1;
+
+            if (matched) {
+                return true;
             }
-            return parseInt(a)-parseInt(b);
+        }
+    }
+
+    isFilterMatched(item, searchVal) {
+        let matched = false;
+        if (this.onFilterOnOptions(item, searchVal, ['name', 'meta', 'badge'])) {
+            matched = true;
+        }
+
+        if (!matched || !(item.children && item.children.length)) {
+            matched = this.findFilteredItems(item, searchVal) || matched;
+        }
+
+        return matched;
+    }
+
+    onFilterOnOptions(item, searchVal, optionKeys) {
+        if (item && optionKeys) {
+            const isMatched = (val) => {
+                if (searchVal.indexOf('&') < 0) {
+                    return val.toLowerCase().indexOf(searchVal) > -1;
+                }
+                else {
+                    return searchVal.split('&').some(s => !!s && val.toLowerCase().indexOf(s) > -1);
+                }
+            };
+
+            return optionKeys.some(optionKey => {
+                const value = item[optionKey];
+
+                return value && (typeof value === 'string' ? isMatched(value) : value.filter(meta => isMatched(meta)).length > 0);
+            });
+        }
+
+        return false;
+    }
+
+    toggleSubmenu(event, name) {
+        let activeSubmenus = { ...this.state.activeSubmenus };
+        activeSubmenus[name] = activeSubmenus[name] ? false : true;
+        this.setState({ activeSubmenus });
+        event.preventDefault();
+    }
+
+    isSubmenuActive(name) {
+        if (this.state.activeSubmenus.hasOwnProperty(name)) {
+            return this.state.activeSubmenus[name];
+        }
+
+        return false;
+    }
+
+    showSearchClearIcon() {
+        return this.state.filteredMenu && this.state.menu && this.state.filteredMenu.length !== this.state.menu.length;
+    }
+
+    resetFilter() {
+        this.setState({ filteredMenu: this.state.menu }, () => {
+            this.searchInput.value = '';
+            this.searchInput.focus();
         });
-        return keys;
     }
 
-    renderCustomMenuContentList(menuContentList, startIndex){
-        let index = startIndex;
-        let output = [];
-        for(let i=0; i<menuContentList.length; i++){
-            let menuContent = menuContentList[i];
-            let menuName = menuContent.menuName;
-            let icon = menuContent.icon;
-            let mapOfNameToRoutes = menuContent.mapOfNameToRoutes;
-            output.push(this.renderSidebarMenu(index++,menuName,icon,this.renderSidebarListOfBulletLinks(mapOfNameToRoutes)));
+    componentDidMount() {
+        this.getMenu();
+    }
+
+    renderBadge(item) {
+        const badge = item.badge;
+        if (badge) {
+            return (
+                <span className={classNames('layout-menu-badge p-tag p-tag-rounded p-ml-2 p-text-uppercase', { [`${badge}`]: true, 'p-tag-success': badge === 'new', 'p-tag-info': badge === 'updated' })}>{badge}</span>
+            );
         }
-        return output;
+
+        return null;
+    }
+
+    renderLink(item, props) {
+        const { name, to, href } = item;
+        const badge = this.renderBadge(item);
+        const content = (
+            <>
+                {name}
+                {badge}
+            </>
+        );
+
+        if (href) {
+            return <a href={href} role="menuitem" target="_blank" rel="noopener noreferrer" onClick={this.props.onMenuItemClick}>{content}</a>
+        }
+        else if (!to) {
+            return <button className="p-link" {...props}>{content}</button>
+        }
+
+        return <NavLink to={to} exact role="menuitem" activeClassName="router-link-exact-active router-link-active" onClick={this.props.onMenuItemClick}>{content}</NavLink>;
+    }
+
+    renderCategorySubmenuItems(item, submenuKey) {
+        const cSubmenuRef = React.createRef();
+
+        return (
+            <CSSTransition nodeRef={cSubmenuRef} classNames="p-toggleable-content" timeout={{ enter: 1000, exit: 450 }} in={this.isSubmenuActive(item.name) || item.expanded} unmountOnExit>
+                <div ref={cSubmenuRef} className="p-toggleable-content">
+                    <ul role="menu">
+                        {
+                            item.children.map((item, index) => {
+                                const link = this.renderLink(item);
+                                return (
+                                    <li role="menuitem" key={`menuitem_${submenuKey}_${index}`}>
+                                        {link}
+                                    </li>
+                                );
+                            })
+                        }
+                    </ul>
+                </div>
+            </CSSTransition>
+        );
+    }
+
+    renderCategoryItem(menuitem, menuitemIndex) {
+        if (menuitem.children) {
+            return (
+                <>
+                    {
+                        menuitem.children.map((item, index) => {
+                            const submenuKey = `${menuitemIndex}_${index}`;
+                            const link = this.renderLink(item, { onClick: (e) => this.toggleSubmenu(e, item.name) });
+
+                            return (
+                                <React.Fragment key={`menuitem_${submenuKey}`}>
+                                    {link}
+                                    {item.children && this.renderCategorySubmenuItems(item, submenuKey)}
+                                </React.Fragment>
+                            )
+                        })
+                    }
+                </>
+            );
+        }
+
+        return null;
+    }
+
+    renderCategoryItems() {
+        if (this.state.menu) {
+            return (
+                <>
+                    {
+                        this.state.filteredMenu && this.state.filteredMenu.map((menuitem, index) => {
+                            const categoryItem = this.renderCategoryItem(menuitem, index);
+                            const badge = this.renderBadge(menuitem);
+                            return (
+                                <React.Fragment key={`category_${index}`}>
+                                    <div className="menu-category">
+                                        {menuitem.name}
+                                        {badge}
+                                    </div>
+                                    <div className="menu-items">
+                                        {categoryItem}
+                                    </div>
+                                </React.Fragment>
+                            )
+                        })
+                    }
+                </>
+            );
+        }
+
+        return null;
     }
 
     render() {
-        let topMenuContent = [];
-        let bottomMenuContent = [];
-
-        let sortedCustomMenuKeys = this.getSortedCustomMenuKeys();
-        for(let i=0; i<sortedCustomMenuKeys.length; i++){
-            let menuKey = sortedCustomMenuKeys[i];
-            let customMenuObject = AppMenu.CUSTOM_MENU_CONTENT[menuKey];
-            if(!isNaN(menuKey) && parseInt(menuKey) < 0){
-                topMenuContent.push(customMenuObject);
-            } else {
-                bottomMenuContent.push(customMenuObject);
-            }
-        }
-
-        let index = 0;
-        let sidebarMenus = [];
-        sidebarMenus.push(this.renderCustomMenuContentList(topMenuContent, -topMenuContent.length));
-        if(AppMenu.DEFAULT_MENU_CONTENT["Tables"]){
-            sidebarMenus.push(this.renderSidebarMenu(index++,"Tables",AppMenu.ICON_DATA,this.renderSchemesSingle()))
-        }
-        if(AppMenu.DEFAULT_MENU_CONTENT["Associations"]){
-            sidebarMenus.push(this.renderSidebarMenu(index++,"Associations",AppMenu.ICON_DATA,this.renderSchemesAssociations()))
-        }
-        if(AppMenu.DEFAULT_MENU_CONTENT["Server"]){
-            sidebarMenus.push(this.renderSidebarMenu(index++,"Server",AppMenu.ICON_DATA,this.renderServerFunctions()))
-        }
-        sidebarMenus.push(this.renderCustomMenuContentList(bottomMenuContent, index));
-
+        const menuItems = this.renderCategoryItems();
+        const showClearIcon = this.showSearchClearIcon();
+        const sidebarClassName = classNames('layout-sidebar', { 'active': this.props.active });
+        const filterContentClassName = classNames('layout-sidebar-filter-content p-input-filled p-input-icon-left p-fluid', { 'p-input-icon-right': showClearIcon });
 
         return (
-            <div className="layout-menu">
-                {sidebarMenus}
+            <div className={sidebarClassName} role="navigation">
+                <div className="layout-sidebar-filter">
+                    <div className={filterContentClassName}>
+                        <i className="pi pi-search" />
+                        <InputText ref={(el) => this.searchInput = el} type="text" onChange={this.onSearchInputChange} placeholder="Search by name, badge..." aria-label="Search input" autoComplete="off" />
+                        {showClearIcon && <i className="clear-icon pi pi-times" onClick={this.resetFilter} />}
+                    </div>
+                </div>
+
+                <div className="layout-menu" role="menubar">
+                    {menuItems}
+                </div>
             </div>
         );
     }

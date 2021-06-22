@@ -1,14 +1,10 @@
-import "regenerator-runtime/runtime.js";
-import 'react-app-polyfill/ie9';
-
-import React from 'react';
 import ReactDOM from 'react-dom';
 import ServerWeb from "./ServerWeb";
 import AppMenu from "./AppMenu";
+import AppMenuItem from "./AppMenuItem";
+import DefaultComponent from "./screens/home/DefaultComponent";
 import App from "./App";
-import SupportComponent from "./screens/home/SupportComponent";
-
-const regeneratorRuntime = require("regenerator-runtime");
+import HomeComponent from "./screens/home/HomeComponent";
 
 const config = {
     "title": "NSFW-Dev",
@@ -18,8 +14,25 @@ const config = {
     "preferedAuthMethod": "myUOS"
 }
 
-App.addDataviewCustomization("Exams", null, true);
-App.setCustomHomeComponent(SupportComponent);
-
 ServerWeb.setConfig(config);
+AppMenu.hideAllDefaultMenuContent();
+
+let customMenu = new AppMenuItem("CustomMenüs", DefaultComponent);
+customMenu.addChildren(new AppMenuItem("DefaultTest", DefaultComponent));
+
+let subChild = new AppMenuItem("SubMenu");
+
+let subsubmenu = new AppMenuItem("SubSubMenu", DefaultComponent);
+subChild.addChildren(subsubmenu);
+subChild.addChildren(new AppMenuItem("AnotherSubSubMenu", DefaultComponent));
+
+let customRoute = new AppMenuItem("NonRelativ", DefaultComponent).setRoute("/ThisIsCustom", false)
+
+customRoute.addChildren(new AppMenuItem("NonRelativSubChild", DefaultComponent));
+customRoute.addChildren(subsubmenu);
+
+customMenu.addChildren(customRoute, subChild);
+
+
+AppMenu.addCustomMenuItem(customMenu);
 ServerWeb.start(ReactDOM);
