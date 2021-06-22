@@ -1,9 +1,11 @@
-
 // this should be the entry point to your library
+import AppMenuItem from "./AppMenuItem";
+
 module.exports = {
     ServerWeb: require('./ServerWeb').default, // eslint-disable-line global-require
     App: require('./App').default, // eslint-disable-line global-require
     AppMenu: require('./AppMenu').default, // eslint-disable-line global-require
+    AppMenuItem: require("./AppMenuItem").default, // eslint-disable-line global-require
     HeaderTemplate: require('./templates/HeaderTemplate').default, // eslint-disable-line global-require
 
     StringHelper: require('./helper/StringHelper').default, // eslint-disable-line global-require
@@ -22,4 +24,5 @@ module.exports = {
     AssociationIndexOverlay: require('./screens/dataview/AssociationIndexOverlay').default, // eslint-disable-line global-require
     DefaultResourceDatatable: require('./screens/dataview/DefaultResourceDatatable').default, // eslint-disable-line global-require
     ResourceCreateComponent: require('./screens/dataview/ResourceCreateComponent').default, // eslint-disable-line global-require
+    DataviewCustomization: require("./screens/dataviewCustomization/DataviewCustomization").default, // eslint-disable-line global-require
 }
