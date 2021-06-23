@@ -33,17 +33,21 @@ export default class ResourceCreateComponent extends Component {
         };
     }
 
-    componentDidMount() {
-        this.loadResources();
+    async componentWillReceiveProps(nextProps) { //update when url is changed
+        await this.loadResources(nextProps);
     }
 
-    async loadResources(){
+    async componentDidMount() {
+        await this.loadResources(this.props);
+    }
+
+    async loadResources(props){
         console.log("ResourceCreateComponent: loadResources");
-        let tableName = this.props.tableName;
+        let tableName = props.tableName;
         let scheme = await NSFWConnector.getScheme(tableName);
         let route = await RouteHelper.getIndexRouteForResourceAsync(tableName);
         let routes = await NSFWConnector.getSchemeRoutes(tableName);
-        this.resource = this.props.resource || {};
+        this.resource = props.resource || {};
 
         this.setState({
             isLoading: false,
@@ -75,7 +79,7 @@ export default class ResourceCreateComponent extends Component {
                 requestPending: false,
             });
             if(!this.props.blockOpenWindowNewResource){
-                WindowHelper.openUrl(this.getInstanceRoute(resourceClass));
+                WindowHelper.openLocalURL(this.getInstanceRoute(resourceClass));
             }
             if(!!this.props.onHandleResourceCreated){
                 this.props.onHandleResourceCreated(resourceClass);

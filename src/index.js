@@ -3,6 +3,7 @@ import ServerWeb from "./ServerWeb";
 import AppMenu from "./AppMenu";
 import AppMenuItem from "./AppMenuItem";
 import DefaultComponent from "./screens/home/DefaultComponent";
+import HomeComponent from "./screens/home/HomeComponent";
 
 const config = {
     "title": "NSFW-Dev",
@@ -13,12 +14,21 @@ const config = {
 }
 
 ServerWeb.setConfig(config);
-AppMenu.hideAllDefaultMenuContent();
+//AppMenu.hideAllDefaultMenuContent();
 let customMenu = new AppMenuItem("MyCustomMenu", DefaultComponent);
-customMenu.addChildren(new AppMenuItem("DefaultTest", DefaultComponent));
+
+let defaultTest = new AppMenuItem("DefaultTest", DefaultComponent);
+customMenu.addChildren(defaultTest);
+
+defaultTest.addChildren(new AppMenuItem("SubDefaultTest", DefaultComponent));
+defaultTest.addChildren(new AppMenuItem("AnotherSubDefaultTest", HomeComponent));
+
+customMenu.addChildren(new AppMenuItem("HomeTest", HomeComponent));
 customMenu.addChildren(new AppMenuItem("ExternalLinkTest", DefaultComponent).setExternLink("https://github.com/"));
 AppMenu.addMenuWithRoutes(customMenu);
 
 AppMenu.addRouteWithoutMenu("/hiddenRoute", DefaultComponent);
+
+AppMenu.setCustomHomeComponent(DefaultComponent);
 
 ServerWeb.start(ReactDOM);

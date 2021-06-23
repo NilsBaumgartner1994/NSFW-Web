@@ -23,11 +23,15 @@ import PrimeReact from 'primereact/api';
 import { AppChangelogDialog } from './AppChangelogDialog';
 import {RouteHelper, NSFWConnector, AuthConnector, MyStorage} from "nsfw-connector";
 import Login from "./screens/auth/Login";
+import WindowHelper, {GlobalHistory} from "./helper/WindowHelper";
+import {withRouter} from "react-router-dom";
 
 
 export class App extends Component {
 
     static AppInstance = null;
+
+    static onThemeChangeCallback = null;
 
     constructor(props) {
         super(props);
@@ -135,7 +139,7 @@ export class App extends Component {
         }
     }
 
-    onThemeChange(event) {
+    async onThemeChange(event) {
         let { theme, dark: darkTheme} = event;
         let themeElement = document.getElementById('theme-link');
         let themeCategory = /^(md-|mdc-)/i.test(theme) ? 'material' : (/^(bootstrap)/i.test(theme) ? 'bootstrap' : null);
@@ -155,9 +159,18 @@ export class App extends Component {
             }
         };
 
-        this.setState(state, () => {
+        await this.setState(state, () => {
             localStorage.setItem(this.theme_key, this.state.theme);
         });
+
+        if (!!App.onThemeChangeCallback) {
+            let args = {
+                theme: theme,
+                darkTheme: darkTheme,
+                themeCategory: themeCategory
+            };
+            await App.onThemeChangeCallback(args);
+        }
     }
 
     onMenuButtonClick() {
@@ -174,6 +187,7 @@ export class App extends Component {
     }
 
     onMenuItemClick() {
+        console.log("Menu Item Click");
         this.setState({ sidebarActive: false });
         this.removeClass(document.body, 'blocked-scroll');
     }
@@ -271,6 +285,7 @@ export class App extends Component {
 
         return (
             <div className={wrapperClassName}>
+                <GlobalHistory />
                 <Toast ref={(el) => this.showcaseToast = el} />
 
                 <AppTopbar onMenuButtonClick={this.onMenuButtonClick} onThemeChange={this.onThemeChange} theme={this.state.theme} darkTheme={this.state.darkTheme} versions={this.state.versions} />

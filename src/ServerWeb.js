@@ -3,7 +3,7 @@ import 'react-app-polyfill/ie9';
 import React, {Component} from 'react';
 import {App} from './App';
 import ScrollToTop from './showcase/scrolltotop/ScrollToTop';
-import { HashRouter } from 'react-router-dom';
+import { HashRouter, BrowserRouter } from 'react-router-dom';
 
 import {MyStorage} from "nsfw-connector";
 
@@ -20,6 +20,10 @@ export default class ServerWeb extends Component{
         }
     }
 
+    static setOnThemeChangeCallback(callback) {
+        App.onThemeChangeCallback = callback;
+    }
+
     static getNSFWConnectorMyStorage(){
         return MyStorage;
     }
@@ -31,10 +35,6 @@ export default class ServerWeb extends Component{
     }
 
     static setCustomLogoSource(src){
-
-    }
-
-    static setCustomHomeComponent(customComponent){
 
     }
 

@@ -7,6 +7,7 @@ import { InputText } from 'primereact/inputtext';
 import NSFWDatabaseMenu from "./nsfwDatabaseMenu/NSFWDatabaseMenu";
 import HomeComponent from "./screens/home/HomeComponent";
 import SupportComponent from "./screens/home/SupportComponent";
+import WindowHelper from "./helper/WindowHelper";
 
 export default class AppMenu extends Component {
 
@@ -16,6 +17,14 @@ export default class AppMenu extends Component {
     static HIDE_MENU_CONTENT = {};
     static CUSTOM_MENUS = [];
     static HIDDEN_ROUTES = {};
+
+    static setCustomHomeComponent(component){
+        AppMenu.CUSTOM_HOME_COMPONENT = component;
+    }
+
+    static setCustomSupportComponent(component){
+        AppMenu.CUSTOM_SUPPORT_COMPONENT = component;
+    }
 
     static hideAllDefaultMenuContent(){
         console.log("AppMenu: hideAllDefaultMenuContent");
@@ -43,14 +52,6 @@ export default class AppMenu extends Component {
     }
 
     async getMenu() {
-        let oldMenuRes = await axios.get('showcase/menu/menu.json', { headers: { 'Cache-Control': 'no-cache' } });
-        let oldMenuData = oldMenuRes.data.data;
-        let data = oldMenuData;
-
-        //                    "badge": "new"
-
-        console.log(data);
-
         let menu = [];
         let customMenus = AppMenu.CUSTOM_MENUS;
         for(let customMenuItem of customMenus){
@@ -59,7 +60,6 @@ export default class AppMenu extends Component {
 
         let nsfwMenu = await NSFWDatabaseMenu.getMenu();
         menu.push(nsfwMenu);
-        //menu = menu.concat(data);
 
         this.setState({ menu: menu, filteredMenu: menu })
     }
@@ -199,7 +199,7 @@ export default class AppMenu extends Component {
             return <button className="p-link" {...props}>{content}</button>
         }
 
-        return <NavLink to={to} exact role="menuitem" activeClassName="router-link-exact-active router-link-active" onClick={this.props.onMenuItemClick}>{content}</NavLink>;
+        return <NavLink to={to} exact role="menuitem" activeClassName="router-link-exact-active router-link-active" onClick={() => {console.log("AppMenu onMenuItemClick"); this.props.onMenuItemClick();}}>{"DD "+content}</NavLink>;
     }
 
     renderCategorySubmenuItems(item, submenuKey) {
@@ -288,8 +288,8 @@ export default class AppMenu extends Component {
                 <div className="layout-sidebar-filter">
                     <div className={filterContentClassName}>
                         <i className="pi pi-search" />
-                        <InputText ref={(el) => this.searchInput = el} type="text" onChange={this.onSearchInputChange} placeholder="Search by name, badge..." aria-label="Search input" autoComplete="off" />
-                        {showClearIcon && <i className="clear-icon pi pi-times" onClick={this.resetFilter} />}
+                        <InputText ref={(el) => this.searchInput = el} type="text" onChange={this.onSearchInputChange.bind(this)} placeholder="Search by name, badge..." aria-label="Search input" autoComplete="off" />
+                        {showClearIcon && <i className="clear-icon pi pi-times" onClick={this.resetFilter.bind(this)} />}
                     </div>
                 </div>
 

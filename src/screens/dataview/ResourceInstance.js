@@ -44,18 +44,21 @@ export default class ResourceInstance extends Component {
         };
     }
 
+    async componentWillReceiveProps(nextProps) { //update when url is changed
+        await this.loadResources(nextProps);
+    }
+
     async componentDidMount() {
-		const { match: { params } } = this.props;
-		this.params = params;
-		console.log(params);
-        await this.loadResources(params);
+        await this.loadResources(this.props);
     }
 
     async reloadPage(){
-        await this.loadResources(this.params);
+        await this.loadResources(this.props);
     }
 
-    async loadResources(params){
+    async loadResources(props){
+        const { match: { params } } = props;
+        this.params = params;
         this.resource = new NSFWResource(this.state.tableName);
         await this.resource.loadByParams(params);
         if(this.resource.isSynchronized()){

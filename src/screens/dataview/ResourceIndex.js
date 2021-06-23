@@ -4,6 +4,7 @@ import {Button} from "primereact/button";
 import WindowHelper from "../../helper/WindowHelper";
 import {Dialog} from "primereact/dialog";
 import App from "../../App";
+import { withRouter } from 'react-router-dom'
 
 import {RouteHelper, NSFWConnector, APIRequest, RequestHelper} from "nsfw-connector";
 
@@ -29,8 +30,16 @@ export default class ResourceIndex extends Component {
         })
     }
 
+    async componentWillReceiveProps(nextProps) { //update when url is changed
+        await this.loadNewProps(nextProps);
+    }
+
     async componentDidMount() {
-        const { match: { params } } = this.props;
+        await this.loadNewProps(this.props);
+    }
+
+    async loadNewProps(props){
+        const { match: { params } } = props;
         let tableName = params.tableName;
         let scheme = await NSFWConnector.getScheme(tableName);
         let routes = await NSFWConnector.getSchemeRoutes(tableName);
@@ -44,7 +53,7 @@ export default class ResourceIndex extends Component {
 
     openCreateResource(){
         let route = RouteHelper.getCreateRouteForResource(this.state.schemes,this.state.tableName);
-        WindowHelper.openUrl(route);
+        WindowHelper.openLocalURL(route);
     }
 
     getCreateItem(){
