@@ -20,6 +20,8 @@ let customMenu = new AppMenuItem("MyCustomMenu", DefaultComponent);
 let defaultTest = new AppMenuItem("DefaultTest", DefaultComponent);
 customMenu.addChildren(defaultTest);
 
+AppMenu.addRouteWithoutMenu("/test/:test_id", DefaultComponent);
+
 defaultTest.addChildren(new AppMenuItem("SubDefaultTest", DefaultComponent));
 defaultTest.addChildren(new AppMenuItem("AnotherSubDefaultTest", HomeComponent));
 

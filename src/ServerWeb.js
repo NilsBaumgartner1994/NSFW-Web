@@ -71,13 +71,13 @@ export default class ServerWeb extends Component{
     render(){
         return(
             <div>
-                <HashRouter>
+                <BrowserRouter basename={"#"}>
                     <ScrollToTop>
                         <React.StrictMode>
                             <App></App>
                         </React.StrictMode>
                     </ScrollToTop>
-                </HashRouter>
+                </BrowserRouter>
                 {/** ReactComponentToHTMLImageRenderer.getHiddenContainer() */}
             </div>
         )
