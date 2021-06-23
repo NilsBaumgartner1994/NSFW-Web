@@ -199,7 +199,7 @@ export default class AppMenu extends Component {
             return <button className="p-link" {...props}>{content}</button>
         }
 
-        return <NavLink to={to} exact role="menuitem" activeClassName="router-link-exact-active router-link-active" onClick={() => {console.log("AppMenu onMenuItemClick"); this.props.onMenuItemClick();}}>{"DD "+content}</NavLink>;
+        return <NavLink to={to} exact role="menuitem" activeClassName="router-link-exact-active router-link-active" onClick={() => {console.log("AppMenu onMenuItemClick"); this.props.onMenuItemClick();}}>{content}</NavLink>;
     }
 
     renderCategorySubmenuItems(item, submenuKey) {

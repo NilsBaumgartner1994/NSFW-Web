@@ -5,6 +5,14 @@ export default class WindowHelper extends Component {
 
     static GLOBAL_HISTORY = null;
 
+    static openExternalUrl(url){
+        window.location.href = url;
+    }
+
+    static openLocalURL(url){
+        WindowHelper.GLOBAL_HISTORY.push(url);
+    }
+
     constructor(props) {
         super(props)
         WindowHelper.GLOBAL_HISTORY = props.history;
@@ -14,13 +22,7 @@ export default class WindowHelper extends Component {
         WindowHelper.GLOBAL_HISTORY = this.props.history;
     }
 
-    static openExternalUrl(url){
-        window.location.href = url;
-    }
 
-    static openLocalURL(url){
-        WindowHelper.GLOBAL_HISTORY.push(url);
-    }
 
     render(){
         return null;
