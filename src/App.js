@@ -32,6 +32,7 @@ export class App extends Component {
     static AppInstance = null;
 
     static onThemeChangeCallback = null;
+    static toastInstance = null;
 
     constructor(props) {
         super(props);
@@ -254,7 +255,7 @@ export class App extends Component {
 
     componentDidMount() {
         if (this.isOutdatedIE()) {
-            this.showcaseToast.show({ severity: 'warn', summary: 'Limited Functionality', detail: 'Although PrimeReact supports IE11, ThemeSwitcher in this application cannot be not fully supported by your browser. Please use a modern browser for the best experience of the showcase.', life: 6000 });
+            App.toastInstance.show({ severity: 'warn', summary: 'Limited Functionality', detail: 'Although PrimeReact supports IE11, ThemeSwitcher in this application cannot be not fully supported by your browser. Please use a modern browser for the best experience of the showcase.', life: 6000 });
         }
 
         this.init();
@@ -286,7 +287,7 @@ export class App extends Component {
         return (
             <div className={wrapperClassName}>
                 <GlobalHistory />
-                <Toast ref={(el) => this.showcaseToast = el} />
+                <Toast ref={(el) => App.toastInstance = el} />
 
                 <AppTopbar onMenuButtonClick={this.onMenuButtonClick} onThemeChange={this.onThemeChange} theme={this.state.theme} darkTheme={this.state.darkTheme} versions={this.state.versions} />
 

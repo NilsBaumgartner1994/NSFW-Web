@@ -43,8 +43,8 @@ export default class ServerWeb extends Component{
     }
 
     static addToastMessage(summary, detail, severity="success",cloasable, sticky, life){
-        if(App.growl && App.growl.show){
-            App.growl.show({severity:severity, summary: summary, detail: detail, cloasable: cloasable, sticky: sticky, life: life});
+        if(App.toastInstance && App.toastInstance.show){
+            App.toastInstance.show({severity:severity, summary: summary, detail: detail, cloasable: cloasable, sticky: sticky, life: life});
         }
     }
 
