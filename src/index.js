@@ -4,6 +4,7 @@ import AppMenu from "./AppMenu";
 import AppMenuItem from "./AppMenuItem";
 import DefaultComponent from "./screens/home/DefaultComponent";
 import HomeComponent from "./screens/home/HomeComponent";
+import ExampleLogoComponent from "./exampleApplication/ExampleLogoComponent";
 
 const config = {
     "title": "NSFW-Dev",
@@ -14,12 +15,14 @@ const config = {
 }
 
 ServerWeb.setConfig(config);
+
+AppMenu.setLogoComponent(ExampleLogoComponent);
+AppMenu.setLogoSrc("/assets/images/logo.png");
+
 //AppMenu.hideAllDefaultMenuContent();
 let customMenu = new AppMenuItem("MyCustomMenu", DefaultComponent);
-
 let defaultTest = new AppMenuItem("DefaultTest", DefaultComponent);
 customMenu.addChildren(defaultTest);
-
 AppMenu.addRouteWithoutMenu("/test/:test_id", DefaultComponent);
 
 defaultTest.addChildren(new AppMenuItem("SubDefaultTest", DefaultComponent));

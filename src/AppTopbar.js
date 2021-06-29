@@ -8,6 +8,12 @@ import AppTopbarCurrentUser from "./AppTopbarCurrentUser";
 
 export class AppTopbar extends Component {
 
+    static CUSTOM_LOGO_SRC = null;
+    static CUSTOM_LOGO_DARK_SRC = null;
+    static CUSTOM_LOGO_COMPONENT = null;
+
+    static TOPBAR_MENU_ITEMS = [AppTopbarCurrentUser, AppTopbarCurrentUser, AppTopbarCurrentUser];
+
     static defaultProps = {
         theme: null,
         darkTheme: false,
@@ -20,6 +26,10 @@ export class AppTopbar extends Component {
         darkTheme: PropTypes.bool,
         onMenuButtonClick: PropTypes.func,
         onThemeChange: PropTypes.func
+    }
+
+    static addTopbarMenuItem(menuComponent){
+        AppTopbar.TOPBAR_MENU_ITEMS.push(menuComponent);
     }
 
     constructor(props) {
@@ -389,14 +399,51 @@ export class AppTopbar extends Component {
         );
     }
 
-    renderUser(toggleIndex){
-        return <AppTopbarCurrentUser theme={this.props.theme} activeMenuIndex={this.state.activeMenuIndex} toggleIndex={toggleIndex} onMenuEnter={this.onMenuEnter.bind(this)} toggleMenu={this.toggleMenu.bind(this)} />;
+    renderLogo(){
+        if(!!AppTopbar.CUSTOM_LOGO_SRC){
+            if(this.props.darkTheme && !!AppTopbar.CUSTOM_LOGO_DARK_SRC){
+                return <img alt="logo" src={AppTopbar.CUSTOM_LOGO_DARK_SRC} />
+            } else {
+                return <img alt="logo" src={AppTopbar.CUSTOM_LOGO_SRC} />
+            }
+        }
+        if(!!AppTopbar.CUSTOM_LOGO_COMPONENT){
+            return React.createElement(AppTopbar.CUSTOM_LOGO_COMPONENT, {
+                darkTheme: this.props.darkTheme,
+                theme: this.props.theme,
+            });
+        }
+
+        return <img alt="logo" src={`showcase/images/primereact-logo${this.props.darkTheme ? '' : '-dark'}.png`} />;
+    }
+
+    renderSelectedTheme(){
+        return (
+            <div className="app-theme" data-pr-tooltip={this.props.theme}>
+                <img alt={this.props.theme} src={`showcase/images/themes/${this.logoMap[this.props.theme]}`} />
+            </div>
+        )
+    }
+
+    renderTopbarMenuItems(){
+        let menuItems = AppTopbar.TOPBAR_MENU_ITEMS;
+        let rendered = [];
+        let toggleIndex = 0;
+        for(let menuComponent of menuItems){
+            let renderedMenuItem = React.createElement(menuComponent, {
+                theme: this.props.theme,
+                activeMenuIndex: this.state.activeMenuIndex,
+                toggleIndex: toggleIndex,
+                onMenuEnter: this.onMenuEnter.bind(this),
+                toggleMenu: this.toggleMenu.bind(this),
+            });
+            toggleIndex++;
+            rendered.push(renderedMenuItem);
+        }
+        return rendered;
     }
 
     render() {
-        let toggleIndex = 0;
-
-
         return (
             <div className="layout-topbar">
                 <Tooltip target=".app-theme" position="bottom" />
@@ -405,21 +452,17 @@ export class AppTopbar extends Component {
                     <i className="pi pi-bars"></i>
                 </button>
                 <Link to="/" className="logo" aria-label="PrimeReact logo">
-                    <img alt="logo" src={`showcase/images/primereact-logo${this.props.darkTheme ? '' : '-dark'}.png`} />
+                    {this.renderLogo()}
                 </Link>
-                <div className="app-theme" data-pr-tooltip={this.props.theme}>
-                    <img alt={this.props.theme} src={`showcase/images/themes/${this.logoMap[this.props.theme]}`} />
-                </div>
+                {/*this.renderSelectedTheme()*/}
 
                 <ul ref={(el) => this.topbarMenu = el} className="topbar-menu p-unselectable-text" role="menubar">
-
-
+                    {this.renderTopbarMenuItems()}
                     {/** this.renderNews(toggleIndex++) */}
                     {/** this.renderGetStarted(toggleIndex++) */}
                     {/** this.renderThemes() */}
                     {/** this.renderTemplates(toggleIndex++) */}
                     {/** this.renderResources(toggleIndex++) */}
-                    {this.renderUser(toggleIndex++)}
                     {/**this.renderVersions(toggleIndex++) */}
                 </ul>
             </div>

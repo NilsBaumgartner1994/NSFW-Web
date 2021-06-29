@@ -8,6 +8,7 @@ import NSFWDatabaseMenu from "./nsfwDatabaseMenu/NSFWDatabaseMenu";
 import HomeComponent from "./screens/home/HomeComponent";
 import SupportComponent from "./screens/home/SupportComponent";
 import WindowHelper from "./helper/WindowHelper";
+import AppTopbar from "./AppTopbar";
 
 export default class AppMenu extends Component {
 
@@ -17,6 +18,24 @@ export default class AppMenu extends Component {
     static HIDE_MENU_CONTENT = {};
     static CUSTOM_MENUS = [];
     static HIDDEN_ROUTES = {};
+
+    /**
+     * Set the logo in the menu topbar
+     * @param src the path to the light theme logo
+     * @param src_dark optional a path to the dark theme logo
+     */
+    static setLogoSrc(src, src_dark){
+        AppTopbar.CUSTOM_LOGO_SRC = src;
+        AppTopbar.CUSTOM_LOGO_DARK_SRC = src_dark;
+    }
+
+    /**
+     * Set the logo component which will be called with props: darkTheme, theme
+     * @param component
+     */
+    static setLogoComponent(component){
+        AppTopbar.CUSTOM_LOGO_COMPONENT = component;
+    }
 
     static setCustomHomeComponent(component){
         AppMenu.CUSTOM_HOME_COMPONENT = component;

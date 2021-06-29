@@ -1,22 +1,16 @@
 import React, { Component } from 'react';
-import { PropTypes } from 'prop-types'
-import { Link } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
-import { Tooltip } from 'primereact/tooltip';
-import { Badge } from 'primereact/badge';
 import {AuthConnector, MyStorage} from "nsfw-connector";
-import WindowHelper from "./helper/WindowHelper";
+import AppTopbarMenuItem from "./AppTopbarMenuItem";
+import {Skeleton} from "primereact/skeleton";
 
 export class AppTopbarCurrentUser extends Component {
 
     constructor(props) {
         super(props);
-
-
-        this.overlayRef = React.createRef();
         this.state = {
-            activeMenuIndex: null,
+            currentUserFound: false,
             displayName: "",
+            isLoading: true,
         };
     }
 
@@ -24,12 +18,16 @@ export class AppTopbarCurrentUser extends Component {
         let loggedIn = await AuthConnector.isLoggedInUser();
         let currentUser = await MyStorage.getCurrentUser(); //after isLoggedInUser !
         let displayName = "Mr. Nobody";
+        let currentUserFound = false;
         if(!!currentUser){
+            currentUserFound = true;
             displayName = currentUser.displayName;
         }
 
         this.setState({
-            displayName: displayName
+            displayName: displayName,
+            loggedIn: loggedIn,
+            //isLoading: false
         })
     }
 
@@ -37,23 +35,60 @@ export class AppTopbarCurrentUser extends Component {
         await AuthConnector.logout();
     }
 
-    renderCurrentUser(){
+    renderUserMenuItem(displayContent, menuContent){
         return(
-            <li role="none" className="topbar-submenu">
-                <button type="button" role="menuitem" onClick={(e) => this.props.toggleMenu(e, this.props.toggleIndex)} aria-haspopup className="p-link">{this.state.displayName}</button>
-                <CSSTransition nodeRef={this.overlayRef} classNames="p-connected-overlay" timeout={{ enter: 120, exit: 100 }} in={this.props.activeMenuIndex === this.props.toggleIndex}
-                               unmountOnExit onEntered={this.props.onMenuEnter}>
-                    <ul ref={this.overlayRef} role="menu" aria-label="Templates">
-                        <li role="none" className="topbar-submenu-header">Actions</li>
-                        <li role="none"><button type="button" className="p-link" role="menuitem" onClick={this.handleLogout.bind(this)}><span>Logout</span></button></li>
-                    </ul>
-                </CSSTransition>
-            </li>
+            <AppTopbarMenuItem theme={this.props.theme} activeMenuIndex={this.props.activeMenuIndex} toggleIndex={this.props.toggleIndex} onMenuEnter={this.props.onMenuEnter} toggleMenu={this.props.toggleMenu} displayName={displayContent} >
+                <ul role="menu" aria-label="Templates">
+                    {menuContent}
+                </ul>
+            </AppTopbarMenuItem>
         )
     }
 
+    renderLoadingSkeleton(){
+        let displayContent = (
+            <div className="p-grid" style={{width: "100px", height: "70px", alignContent: "center", backgroundColor: "red"}}>
+                <div className="p-col-4">
+                    <Skeleton shape="circle" size="40px" />
+                </div>
+                <div className="p-col-1">
+
+                </div>
+                <div className="p-col-6">
+                    <Skeleton width="100%" height="1rem" borderRadius="16px" />
+                    <Skeleton width="80%" height="1rem" borderRadius="16px" style={{margin: "5px"}} />
+                </div>
+                <div className="p-col-1">
+
+                </div>
+            </div>
+        );
+
+        let actions = (
+            <>
+                <li role="none" className="topbar-submenu-header">Actions</li>
+                <li role="none"> <Skeleton borderRadius="16px" width="10rem" className="p-mb-2"></Skeleton></li>
+            </>
+        )
+
+        return this.renderUserMenuItem(displayContent, actions);
+    }
+
     render() {
-        return this.renderCurrentUser();
+        if(this.state.isLoading){
+            return this.renderLoadingSkeleton();
+        }
+
+        if(this.state.currentUserFound){
+            let actions = <>
+                <li role="none" className="topbar-submenu-header">Actions</li>
+                <li role="none"><button type="button" className="p-link" role="menuitem" onClick={this.handleLogout.bind(this)}><span>Logout</span></button></li>
+            </>;
+
+            return this.renderUserMenuItem(this.state.displayName, actions);
+        } else {
+            return null;
+        }
     }
 }
 
