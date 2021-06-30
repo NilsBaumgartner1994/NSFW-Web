@@ -23,8 +23,13 @@ import {
     NSFWResource,
     ResourceHelper
 } from "nsfw-connector";
+import WindowHelper from "../../helper/WindowHelper";
+import ServerWeb from "../../ServerWeb";
+import {Tooltip} from "primereact/tooltip";
 
 export default class ResourceInstance extends Component {
+
+    static INFORMATION_TO_SAVE_BEFORE_APPLY_ASSOCIATION_CHANGE = "Save first to change associations!"
 
     constructor(schemes,tableName) {
         super();
@@ -49,8 +54,18 @@ export default class ResourceInstance extends Component {
     }
 
     async componentDidMount() {
+        WindowHelper.registerCheckToBlockPageChange(this.isPageChangeAllowed.bind(this));
         await this.loadResources(this.props);
     }
+
+    async componentWillUnmount() {
+        WindowHelper.unregisterCheckToBlockPageChange();
+    }
+
+    isPageChangeAllowed(nextLocation, pageReload){
+        return !this.state.isEdited;
+    }
+
 
     async reloadPage(){
         await this.loadResources(this.props);
@@ -127,13 +142,13 @@ export default class ResourceInstance extends Component {
                 requestPending: false,
             });
             let detail = !answer ? 'Unkown error!' : answer.error;
-            App.addToastMessage("Error",detail,"error");
+            ServerWeb.addToastMessage("Error",detail,"error");
         } else {
             this.setState({
                 isEdited: false,
                 requestPending: false,
             });
-            App.addToastMessage("Success","Changes saved");
+            ServerWeb.addToastMessage("Success","Changes saved");
         }
     }
 
@@ -277,6 +292,12 @@ export default class ResourceInstance extends Component {
 
         let noAssociations = amount===0;
 
+        let disabledDueUnsavedData = this.state.isEdited;
+        let tooltip = null;
+        if(disabledDueUnsavedData){
+            tooltip = ResourceInstance.INFORMATION_TO_SAVE_BEFORE_APPLY_ASSOCIATION_CHANGE;
+        }
+
         return(
             <div className="p-col-12">
                 <Card title={associationName+" "+amountText}>
@@ -296,11 +317,12 @@ export default class ResourceInstance extends Component {
                         <AssociationIndexOverlay key={overlaypanelIDDelete + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_DELETE_MULTIPLE} callbackFunction={deleteCallbackFunction} tableName={associationTableName} scheme={modelscheme} associatedResources={associatedResources}/>
                     </OverlayPanel>
 
-                    <Button style={{"margin-right":"1em"}} type="button" icon="pi pi-plus" className="p-button-success" label="Create & Add" onClick={(e) => this[overlaypanelIDCreateAndAdd].toggle(e)} />
+                    <div>{tooltip}</div>
+                    <Button style={{"margin-right":"1em"}} disabled={disabledDueUnsavedData} type="button" icon="pi pi-plus" className="p-button-success" label="Create & Add" onClick={(e) => this[overlaypanelIDCreateAndAdd].toggle(e)} />
                     <Button style={{"margin-right":"1em"}} disabled={noAssociations} type="button" icon="pi pi-search" label="View" onClick={(e) => this[overlaypanelIDView].toggle(e)} />
-                    <Button style={{"margin-right":"1em"}} type="button" icon="pi pi-plus" className="p-button-success" label="Add" onClick={(e) => this[overlaypanelIDAddNew].toggle(e)} />
-                    <Button style={{"margin-right":"1em"}} disabled={noAssociations} type="button" icon="pi pi-minus" className="p-button-danger" label="Remove" onClick={(e) => this[overlaypanelIDRemove].toggle(e)} />
-                    <Button style={{"margin-right":"1em"}} disabled={noAssociations} type="button" icon="pi pi-trash" className="p-button-danger" label="Delete" onClick={(e) => this[overlaypanelIDDelete].toggle(e)} />
+                    <Button style={{"margin-right":"1em"}} disabled={disabledDueUnsavedData} type="button" icon="pi pi-plus" className="p-button-success" label="Add" onClick={(e) => this[overlaypanelIDAddNew].toggle(e)} />
+                    <Button style={{"margin-right":"1em"}} disabled={noAssociations || disabledDueUnsavedData} type="button" icon="pi pi-minus" className="p-button-danger" label="Remove" onClick={(e) => this[overlaypanelIDRemove].toggle(e)} />
+                    <Button style={{"margin-right":"1em"}} disabled={noAssociations || disabledDueUnsavedData} type="button" icon="pi pi-trash" className="p-button-danger" label="Delete" onClick={(e) => this[overlaypanelIDDelete].toggle(e)} />
 
                 </Card>
             </div>
@@ -319,14 +341,20 @@ export default class ResourceInstance extends Component {
         let amountSuccess = responseJSON.success.length;
         let amountErrors = responseJSON.errors.length;
         if(amountSuccess>0){
-            App.addToastMessage("Success",amountSuccess+" "+associationName+" added");
+            ServerWeb.addToastMessage("Success",amountSuccess+" "+associationName+" added");
         }
         if(amountErrors>0){
-            App.addToastMessage("Error ",amountErrors+" "+associationName+" not added","error");
+            ServerWeb.addToastMessage("Error ",amountErrors+" "+associationName+" not added","error");
         }
 
-        this[overlaypanelID].hide();
+        this.hideOverlay(overlaypanelID);
         this.reloadPage();
+    }
+
+    hideOverlay(overlaypanelID){
+        if(!!this[overlaypanelID]){
+            this[overlaypanelID].hide();
+        }
     }
 
     async handleRemoveAssociationsMultiple(overlaypanelID,associationTableName,associationName,associationResources){
@@ -342,13 +370,13 @@ export default class ResourceInstance extends Component {
         let amountErrors = responseJSON.errors.length;
 
         if(amountSuccess>0){
-            App.addToastMessage("Success",amountSuccess+" "+associationName+" removed");
+            ServerWeb.addToastMessage("Success",amountSuccess+" "+associationName+" removed");
         }
         if(amountErrors>0){
-            App.addToastMessage("Error ",amountErrors+" "+associationName+" not added","error");
+            ServerWeb.addToastMessage("Error ",amountErrors+" "+associationName+" not added","error");
         }
 
-        this[overlaypanelID].hide();
+        this.hideOverlay(overlaypanelID);
         this.reloadPage();
     }
 
@@ -358,13 +386,13 @@ export default class ResourceInstance extends Component {
         let amountErrors = responseJSON.errors.length;
 
         if(amountSuccess>0){
-            App.addToastMessage("Success",amountSuccess+" "+associationName+" removed");
+            ServerWeb.addToastMessage("Success",amountSuccess+" "+associationName+" removed");
         }
         if(amountErrors>0){
-            App.addToastMessage("Error ",amountErrors+" "+associationName+" not added","error");
+            ServerWeb.addToastMessage("Error ",amountErrors+" "+associationName+" not added","error");
         }
 
-        this[overlaypanelID].hide();
+        this.hideOverlay(overlaypanelID);
         this.reloadPage();
     }
 
@@ -390,6 +418,12 @@ export default class ResourceInstance extends Component {
         let removeCallbackFunction = this.handleRemoveAssociationsSingle.bind(this,associationTableName,associationName);
         let deleteCallbackFunction = this.handleDeleteAssociationsSingle.bind(this,associationTableName,associationName, resource);
 
+        let disabledDueUnsavedData = this.state.isEdited;
+        let tooltip = null;
+        if(disabledDueUnsavedData){
+            tooltip = ResourceInstance.INFORMATION_TO_SAVE_BEFORE_APPLY_ASSOCIATION_CHANGE;
+        }
+
         return(
             <div className="p-col-12">
                 <Card title={associationName+" "+amountText}>
@@ -403,11 +437,12 @@ export default class ResourceInstance extends Component {
                         <AssociationIndexOverlay key={overlaypanelIDAddNew + this.state.increasingNumber} tableType={AssociationIndexOverlay.TABLETYPE_SET_SINGLE} callbackFunction={addCallbackFunction} tableName={associationTableName} associatedResources={associatedResources}/>
                     </OverlayPanel>
 
-                    <Button style={{"margin-right":"1em"}} disabled={isAssociated} className="p-button-success" type="button" icon="pi pi-plus" label="Create & Set" onClick={(e) => this[overlaypanelIDCreateAndSet].toggle(e)} />
+                    <div>{tooltip}</div>
+                    <Button style={{"margin-right":"1em"}} disabled={isAssociated || disabledDueUnsavedData} className="p-button-success" type="button" icon="pi pi-plus" label="Create & Set" onClick={(e) => this[overlaypanelIDCreateAndSet].toggle(e)} />
                     <Button style={{"margin-right":"1em"}} disabled={!isAssociated} type="button" icon="pi pi-search" label="View" onClick={(e) => this[overlaypanelIDView].toggle(e)} />
-                    <Button style={{"margin-right":"1em"}} disabled={isAssociated} className="p-button-success" type="button" icon="pi pi-plus" label="Set" onClick={(e) => this[overlaypanelIDAddNew].toggle(e)} />
-                    <Button style={{"margin-right":"1em"}} disabled={!isAssociated} className="p-button-danger" type="button" icon="pi pi-minus" label="Remove" onClick={(e) => removeCallbackFunction()} />
-                    <Button style={{"margin-right":"1em"}} disabled={!isAssociated} className="p-button-danger" type="button" icon="pi pi-trash" label="Delete" onClick={(e) => deleteCallbackFunction()} />
+                    <Button style={{"margin-right":"1em"}} disabled={isAssociated || disabledDueUnsavedData} className="p-button-success" type="button" icon="pi pi-plus" label="Set" onClick={(e) => this[overlaypanelIDAddNew].toggle(e)} />
+                    <Button style={{"margin-right":"1em"}} disabled={!isAssociated || disabledDueUnsavedData} className="p-button-danger" type="button" icon="pi pi-minus" label="Remove" onClick={(e) => removeCallbackFunction()} />
+                    <Button style={{"margin-right":"1em"}} disabled={!isAssociated || disabledDueUnsavedData} className="p-button-danger" type="button" icon="pi pi-trash" label="Delete" onClick={(e) => deleteCallbackFunction()} />
 
                 </Card>
             </div>
@@ -424,12 +459,12 @@ export default class ResourceInstance extends Component {
             let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_POST,route);
 
             if(RequestHelper.isSuccess(answer)){
-                App.addToastMessage("Success",associationName+" added");
-                this[overlaypanelID].hide();
+                ServerWeb.addToastMessage("Success",associationName+" added");
+                this.hideOverlay(overlaypanelID);
                 this.reloadPage();
             }
         } else {
-            App.addToastMessage("Error",associationName+" not added","error");
+            ServerWeb.addToastMessage("Error",associationName+" not added","error");
         }
     }
 
@@ -438,10 +473,10 @@ export default class ResourceInstance extends Component {
         let answer = await APIRequest.sendRequestWithAutoAuthorize(RequestHelper.REQUEST_TYPE_DELETE,route);
 
         if(RequestHelper.isSuccess(answer)){
-            App.addToastMessage("Success",associationName+" removed");
+            ServerWeb.addToastMessage("Success",associationName+" removed");
             this.reloadPage();
         } else {
-            App.addToastMessage("Error",associationName+" not removed","error");
+            ServerWeb.addToastMessage("Error",associationName+" not removed","error");
         }
     }
 
@@ -449,10 +484,10 @@ export default class ResourceInstance extends Component {
         let answer = await resource.destroy();
 
         if(RequestHelper.isSuccess(answer)){
-            App.addToastMessage("Success",associationName+" removed");
+            ServerWeb.addToastMessage("Success",associationName+" removed");
             this.reloadPage();
         } else {
-            App.addToastMessage("Error",associationName+" not removed","error");
+            ServerWeb.addToastMessage("Error",associationName+" not removed","error");
         }
     }
 
@@ -549,7 +584,6 @@ export default class ResourceInstance extends Component {
         return (
             <div>
                 {this.renderHeader()}
-
                 <div className="content-section implementation">
 
                     <div className="p-grid">

@@ -8,6 +8,7 @@ import EditableField from "./EditableField";
 
 import {RouteHelper, NSFWConnector, APIRequest, RequestHelper, SchemeHelper, NSFWResource} from "nsfw-connector";
 import App from "../../App";
+import ServerWeb from "../../ServerWeb";
 
 
 export default class ResourceCreateComponent extends Component {
@@ -66,9 +67,9 @@ export default class ResourceCreateComponent extends Component {
             this.setState({
                 requestPending: false,
             });
-            App.addToastMessage('Error', detail, 'error');
+            ServerWeb.addToastMessage('Error', detail, 'error');
         } else {
-            App.addToastMessage('Success', 'Changes saved', 'success');
+            ServerWeb.addToastMessage('Success', 'Changes saved', 'success');
             //TODO Go To Instance Side
             let resource = answer.data;
             let resourceClass = new NSFWResource(this.props.tableName);

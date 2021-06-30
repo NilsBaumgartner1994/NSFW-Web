@@ -7,6 +7,7 @@ import App from "../../App";
 import { withRouter } from 'react-router-dom'
 
 import {RouteHelper, NSFWConnector, APIRequest, RequestHelper} from "nsfw-connector";
+import ServerWeb from "../../ServerWeb";
 
 export default class ResourceIndex extends Component {
 
@@ -109,10 +110,10 @@ export default class ResourceIndex extends Component {
         }
         let amountErrors = amountResources-amountSuccess;
         if(amountSuccess>0){
-            App.addToastMessage("Success",amountSuccess+" "+tableName+" created");
+            ServerWeb.addToastMessage("Success",amountSuccess+" "+tableName+" created");
         }
         if(amountErrors>0){
-            App.addToastMessage("Error ",amountErrors+" "+tableName+" not created","error");
+            ServerWeb.addToastMessage("Error ",amountErrors+" "+tableName+" not created","error");
         }
         this.setState({
             reloadNumber: this.state.reloadNumber+1,
@@ -139,10 +140,10 @@ export default class ResourceIndex extends Component {
 
         await this.setDialogVisible(ResourceIndex.DIALOG_DELETE,false)
         if(amountSuccess>0){
-            App.addToastMessage("Success",amountSuccess+" "+tableName+" deleted");
+            ServerWeb.addToastMessage("Success",amountSuccess+" "+tableName+" deleted");
         }
         if(amountErrors>0){
-            App.addToastMessage("Error ",amountErrors+" "+tableName+" not deleted","error");
+            ServerWeb.addToastMessage("Error ",amountErrors+" "+tableName+" not deleted","error");
         }
         this.setState({
             reloadNumber: this.state.reloadNumber+1,

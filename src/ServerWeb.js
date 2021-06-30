@@ -34,10 +34,6 @@ export default class ServerWeb extends Component{
         document.title = ServerWeb.CONFIG.title || "";
     }
 
-    static setCustomLogoSource(src){
-
-    }
-
     static registerCustomRoute(route, component){
         App.CUSTOM_ROUTES[route] = component;
     }

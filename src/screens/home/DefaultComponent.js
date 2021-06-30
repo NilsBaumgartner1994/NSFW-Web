@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Skeleton} from "primereact/skeleton";
 
 export default class DefaultComponent extends Component {
 

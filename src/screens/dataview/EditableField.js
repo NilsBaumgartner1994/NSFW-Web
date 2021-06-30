@@ -14,6 +14,7 @@ import MyFileUploader from "../../helper/MyFileUploader";
 import App from "../../App";
 import DownloadHelper from "../../helper/DownloadHelper";
 import MyFileHelper from "../../helper/MyFileHelper";
+import ServerWeb from "../../ServerWeb";
 
 export default class EditableField extends Component {
 
@@ -317,7 +318,7 @@ export default class EditableField extends Component {
                 increasingNumber: this.props.instance.state.increasingNumber+1
             });
         } catch (err){
-            App.addToastMessage("Fehler","beim Hochladen der Datei", "error");
+            ServerWeb.addToastMessage("Fehler","beim Hochladen der Datei", "error");
         }
     }
 

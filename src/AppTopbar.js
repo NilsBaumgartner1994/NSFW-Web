@@ -458,7 +458,6 @@ export class AppTopbar extends Component {
 
                 <ul ref={(el) => this.topbarMenu = el} className="topbar-menu p-unselectable-text" role="menubar">
                     {this.renderTopbarMenuItems()}
-                    {/** this.renderNews(toggleIndex++) */}
                     {/** this.renderGetStarted(toggleIndex++) */}
                     {/** this.renderThemes() */}
                     {/** this.renderTemplates(toggleIndex++) */}
