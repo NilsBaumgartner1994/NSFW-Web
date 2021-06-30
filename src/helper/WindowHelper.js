@@ -27,35 +27,48 @@ export default class WindowHelper extends Component {
         return null;
     }
 
+
+    static PAGECHANGE_DIALOG_HEADER = null;
+    static PAGECHANGE_DIALOG_MESSAGE = null;
+    static PAGECHANGE_DIALOG_ICON = null;
+    static PAGECHANGE_DIALOG_ACCEPT_LABEL = null;
+    static PAGECHANGE_DIALOG_REJECT_LABEL = null;
+
+    static setPageChangeDialog(header, message, acceptLabel, rejectLabel, icon){
+        WindowHelper.PAGECHANGE_DIALOG_HEADER = header;
+        WindowHelper.PAGECHANGE_DIALOG_MESSAGE = message;
+        WindowHelper.PAGECHANGE_DIALOG_ICON = icon;
+        WindowHelper.PAGECHANGE_DIALOG_ACCEPT_LABEL = acceptLabel;
+        WindowHelper.PAGECHANGE_DIALOG_REJECT_LABEL = rejectLabel;
+    }
+
     static showPageChangeDialog(targetLocation){
         console.log("showPageChangeDialog");
         console.log("targetLocation: "+targetLocation);
         console.log(targetLocation);
 
         confirmDialog({
-            message: 'Ihre Änderungen werden nicht gespeichert.',
-            header: 'Seite verlassen?',
-            icon: 'pi pi-exclamation-triangle',
+            message: WindowHelper.PAGECHANGE_DIALOG_HEADER || "Your changes won't be saved.",
+            header: WindowHelper.PAGECHANGE_DIALOG_MESSAGE || 'Leave page?',
+            icon: WindowHelper.PAGECHANGE_DIALOG_ICON || 'pi pi-exclamation-triangle',
+            acceptLabel: WindowHelper.PAGECHANGE_DIALOG_ACCEPT_LABEL || "Yes",
+            rejectLabel: WindowHelper.PAGECHANGE_DIALOG_REJECT_LABEL || "No",
             accept: () => {
-                console.log("Ja");
                 WindowHelper.unregisterCheckToBlockPageChange(); //we need to unregister the event
                 WindowHelper.GLOBAL_HISTORY.push(targetLocation); //then we retriger the page change
             },
-            reject: () => {console.log("Nein")}
+            reject: () => {}
         });
     }
 
 
     static FUNCTION_TO_CHECK_IF_PAGECHANGE_IS_ALLOWED = null;
-    static CUSTOM_COMPONENT_TO_HANDLE_PAGECHANGE = false;
+    static USE_CUSTOM_PAGE_CHANGE_DIALOG = false;
 
     static _checkPageChangeAllowed(targetLocation, pageReload){
-        console.log("_checkPageChangeAllowed");
         if(!!WindowHelper.FUNCTION_TO_CHECK_IF_PAGECHANGE_IS_ALLOWED){
-            console.log("Function to check pagechange found");
             let allowed = WindowHelper.FUNCTION_TO_CHECK_IF_PAGECHANGE_IS_ALLOWED(targetLocation, pageReload);
-            console.log("Allowed: "+allowed);
-            if(!allowed && !!targetLocation && !pageReload && !WindowHelper.CUSTOM_COMPONENT_TO_HANDLE_PAGECHANGE){
+            if(!allowed && !!targetLocation && !pageReload && !WindowHelper.USE_CUSTOM_PAGE_CHANGE_DIALOG){
                 WindowHelper.showPageChangeDialog(targetLocation);
             }
             return allowed;
@@ -63,14 +76,12 @@ export default class WindowHelper extends Component {
         return true;
     }
 
-    static useCustomComponentToHandlePageChangeDialog(bool){
-        WindowHelper.CUSTOM_COMPONENT_TO_HANDLE_PAGECHANGE = bool;
+    static useCustomPageChangeDialog(bool){
+        WindowHelper.USE_CUSTOM_PAGE_CHANGE_DIALOG = bool;
     }
 
     static async _checkPageReloadAllowed(event){
-        console.log("_checkPageReloadAllowed");
         let allowed = WindowHelper._checkPageChangeAllowed(null, true);
-        console.log("RESULT: "+allowed);
         if(!allowed){
             console.log(event);
             event.preventDefault();
@@ -83,10 +94,8 @@ export default class WindowHelper extends Component {
         window.addEventListener('beforeunload', WindowHelper._checkPageReloadAllowed.bind(this));
         WindowHelper.unblockPageReloadFunction = WindowHelper.GLOBAL_HISTORY.block(targetLocation => {
             console.log(WindowHelper.GLOBAL_HISTORY);
-            console.log("Page transistion noticed");
             // take your action here
-            let allowed = WindowHelper._checkPageChangeAllowed(targetLocation, false);
-            return allowed;
+            return WindowHelper._checkPageChangeAllowed(targetLocation, false);
         });
     }
 
