@@ -31,6 +31,8 @@ export class App extends Component {
 
     static AppInstance = null;
 
+    static onSetLoggedInStateCallback = null;
+
     static onThemeChangeCallback = null;
     static toastInstance = null;
 
@@ -137,6 +139,13 @@ export class App extends Component {
             await this.setState({
                 loggedIn: loggedIn
             });
+        }
+        await this.handleLoggedInCallback(loggedIn);
+    }
+
+    async handleLoggedInCallback(loggedIn){
+        if(!!App.onSetLoggedInStateCallback){
+            await App.onSetLoggedInStateCallback(loggedIn);
         }
     }
 

@@ -20,6 +20,10 @@ export default class ServerWeb extends Component{
         }
     }
 
+    static setOnLoggedInStateCallback(callback){
+        App.onSetLoggedInStateCallback = callback;
+    }
+
     static setOnThemeChangeCallback(callback) {
         App.onThemeChangeCallback = callback;
     }
