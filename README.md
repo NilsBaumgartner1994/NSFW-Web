@@ -1,3 +1,8 @@
+# Discontinued
+
+Since of becomming aware of strapi (https://strapi.io/) I wont continue on this project.
+
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://badge.fury.io/js/nsfw-web.svg)](https://badge.fury.io/js/nsfw-web)
 
