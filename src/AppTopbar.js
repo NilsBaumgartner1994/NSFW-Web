@@ -12,7 +12,7 @@ export class AppTopbar extends Component {
     static CUSTOM_LOGO_DARK_SRC = null;
     static CUSTOM_LOGO_COMPONENT = null;
 
-    static TOPBAR_MENU_ITEMS = [AppTopbarCurrentUser, AppTopbarCurrentUser, AppTopbarCurrentUser];
+    static TOPBAR_MENU_ITEMS = [AppTopbarCurrentUser];
 
     static defaultProps = {
         theme: null,

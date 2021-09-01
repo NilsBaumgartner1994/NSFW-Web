@@ -10,15 +10,23 @@ export class AppTopbarCurrentUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            currentUser: null,
             currentUserFound: false,
             displayName: "",
             isLoading: true,
         };
+
+        console.log("AppTopbarCurrentUser constructor");
     }
 
-    async componentDidMount() {
+    async loadInformations(){
         let loggedIn = await AuthConnector.isLoggedInUser();
-        let currentUser = await MyStorage.getCurrentUser(); //after isLoggedInUser !
+        console.log("componentDidMount");
+        console.log("loggedIn: "+loggedIn);
+
+        let currentUser = await AuthConnector.loadFromServerCurrentUser();
+        console.log("currentUser");
+        console.log(currentUser);
         let displayName = "Mr. Nobody";
         let currentUserFound = false;
         if(!!currentUser){
@@ -27,10 +35,16 @@ export class AppTopbarCurrentUser extends Component {
         }
 
         this.setState({
+            currentUser: currentUser,
             currentUserFound: currentUserFound,
             displayName: displayName,
             loggedIn: loggedIn,
+            isLoading: false,
         })
+    }
+
+    async componentDidMount() {
+       this.loadInformations();
     }
 
     async handleLogout(){
@@ -48,10 +62,12 @@ export class AppTopbarCurrentUser extends Component {
     }
 
     render() {
+        let logoutButton = <li role="none"><button type="button" className="p-link" role="menuitem" onClick={this.handleLogout.bind(this)}><span>Logout</span></button></li>;
+
         if(this.state.currentUserFound){
             let actions = <>
                 <li role="none" className="topbar-submenu-header">Actions</li>
-                <li role="none"><button type="button" className="p-link" role="menuitem" onClick={this.handleLogout.bind(this)}><span>Logout</span></button></li>
+                {logoutButton}
             </>;
 
             return this.renderUserMenuItem(this.state.displayName, actions);

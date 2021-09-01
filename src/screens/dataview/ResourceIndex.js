@@ -180,13 +180,13 @@ export default class ResourceIndex extends Component {
         }
         return <div>
             {this.renderDialogDeleteResources()}
-            <DefaultResourceDatatable
-                onHandleImport={this.handleImportResource.bind(this)}
-                key={this.state.reloadNumber}
-                onSelectionChange={this.onSelectionChange.bind(this)}
-                schemes={this.state.schemes}
-                tableName={this.state.tableName}
-                menuItems={this.getMenuItems()} />
+                <DefaultResourceDatatable
+                    onHandleImport={this.handleImportResource.bind(this)}
+                    key={this.state.tableName+this.state.reloadNumber} //needed name, cause of screen change
+                    onSelectionChange={this.onSelectionChange.bind(this)}
+                    schemes={this.state.schemes}
+                    tableName={this.state.tableName}
+                    menuItems={this.getMenuItems()} />
         </div>
     }
 }
