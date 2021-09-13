@@ -19,6 +19,8 @@ export default class AppMenu extends Component {
     static CUSTOM_MENUS = [];
     static HIDDEN_ROUTES = {};
 
+    static CUSTOM_GET_MENU_FUNCTION = null;
+
     /**
      * Set the logo in the menu topbar
      * @param src the path to the light theme logo
@@ -79,6 +81,10 @@ export default class AppMenu extends Component {
 
         let nsfwMenu = await NSFWDatabaseMenu.getMenu();
         menu.push(nsfwMenu);
+
+        if(!!AppMenu.CUSTOM_GET_MENU_FUNCTION){
+            menu = await AppMenu.CUSTOM_GET_MENU_FUNCTION(menu, this.props);
+        }
 
         this.setState({ menu: menu, filteredMenu: menu })
     }
