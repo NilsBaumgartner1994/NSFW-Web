@@ -84,7 +84,12 @@ export default class Login extends Component {
 
         let authInputs = this.state.authInputs;
         let selectedAuthInputs = authInputs[selectedAuth] || {};
-        selectedAuthInputs[paramKey] = event.target.value;
+        let isPasswordParam = this.isParamPassword(paramKey);
+        if(isPasswordParam){
+            selectedAuthInputs[paramKey] = event.target.value;
+        } else {
+            selectedAuthInputs[paramKey] = (""+event.target.value).toLowerCase();
+        }
         authInputs[selectedAuth] = selectedAuthInputs;
 
         await this.setState({
